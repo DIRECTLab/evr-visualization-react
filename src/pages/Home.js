@@ -1,6 +1,5 @@
 import React from "react"
-import DefaultLayout from "../layouts/DefaultLayout"
-
+import MonitorChart from "../components/evr/MonitorChart";
 
 const Home = () => {
 
@@ -8,8 +7,7 @@ const Home = () => {
     <div className="prose md:container md:mx-auto mx-auto mb-8">
       <div className="card shadow-xl mx-4 my-8">
         <div className="card-body">
-          {/* <LevitonAndSum /> */}
-          <h1 className="text-xl">TEST</h1>
+          <MonitorChart />
         </div>
       </div>
       <div className="my-4">

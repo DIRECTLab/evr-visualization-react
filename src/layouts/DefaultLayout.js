@@ -14,7 +14,6 @@ const DefaultLayout = () => {
           </ul>
         </div>
       </div>
-      <slot />
     </>
   )
 }
