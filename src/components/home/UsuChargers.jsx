@@ -27,7 +27,7 @@ const UsuChargers = () => {
     }));
 
     const usuChargers = chargerData.filter((value) => {
-      return value.ChargerId == "T175-IT1-3420-003" || value.ChargerId == "T175-IT1-3420-016";
+      return value.ChargerId === "T175-IT1-3420-003" || value.ChargerId === "T175-IT1-3420-016";
     })
 
 
