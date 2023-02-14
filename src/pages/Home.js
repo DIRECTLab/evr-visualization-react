@@ -1,5 +1,6 @@
 import React from "react"
 import CurrentUtilization from "../components/home/CurrentUtilization";
+import UsuChargers from "../components/home/UsuChargers";
 
 const Home = () => {
 
@@ -16,7 +17,7 @@ const Home = () => {
         {/* <GraphCarousel /> */}
       </div>
       <div className="my-4">
-        {/* <UsuChargers /> */}
+        <UsuChargers />
       </div>
     </div>
   )
