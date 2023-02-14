@@ -1,5 +1,5 @@
 import React from "react"
-import MonitorChart from "../components/evr/MonitorChart";
+import CurrentUtilization from "../components/home/CurrentUtilization";
 
 const Home = () => {
 
@@ -7,11 +7,10 @@ const Home = () => {
     <div className="prose md:container md:mx-auto mx-auto mb-8">
       <div className="card shadow-xl mx-4 my-8">
         <div className="card-body">
-          <MonitorChart />
         </div>
       </div>
       <div className="my-4">
-        {/* <CurrentUtilization /> */}
+        <CurrentUtilization />
       </div>
       <div className="my-4">
         {/* <GraphCarousel /> */}
