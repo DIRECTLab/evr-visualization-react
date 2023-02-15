@@ -107,7 +107,6 @@ const MonitorChart = () => {
       let sum = (sumArray[i] + data[i]);
       facPower.push(sum);
     }
-    console.log(facPower)
 
 
     setChartData({
