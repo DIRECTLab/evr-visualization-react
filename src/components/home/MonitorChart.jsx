@@ -36,6 +36,13 @@ export const options = {
       position: 'top',
     },
   },
+  scales: {
+    y: {
+      min: -80,
+      max: 120,
+    },
+  },
+  maintainAspectRatio: false,
 }
 
 const MonitorChart = () => {
@@ -162,6 +169,7 @@ const MonitorChart = () => {
           options={options}
           ref={chartRef}
           redraw={false}
+          height={"500px"}
         />
       </div>
     )

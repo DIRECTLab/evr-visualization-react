@@ -1,5 +1,6 @@
 import React from "react"
 import CurrentUtilization from "../components/home/CurrentUtilization";
+import GraphCarousel from "../components/home/GraphCarousel";
 import MonitorChart from "../components/home/MonitorChart";
 import UsuChargers from "../components/home/UsuChargers";
 
@@ -16,7 +17,7 @@ const Home = () => {
         <CurrentUtilization />
       </div>
       <div className="my-4">
-        {/* <GraphCarousel /> */}
+        <GraphCarousel />
       </div>
       <div className="my-4">
         <UsuChargers />
