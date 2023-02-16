@@ -8,7 +8,8 @@ import { useState, useEffect} from 'react'
 import moment from 'moment'
 import api from '../../api'
 import Loading from '../Loading'
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCircleCheck, faXmarkCircle } from '@fortawesome/free-regular-svg-icons'
 
 const ChargerTable = () => {
   const columns = [
@@ -24,7 +25,9 @@ const ChargerTable = () => {
     },
     {
       accessorKey: 'connected',
-      cell: info => info.getValue() ? <i className="fa-solid fa-circle-check text-success"></i> : <i className="fa-solid fa-circle-xmark text-error"></i>,
+      // cell: info => info.getValue() ? <i className="fa-solid fa-circle-check text-success"></i> : <i className="fa-solid fa-circle-xmark text-error"></i>,
+      cell: info => info.getValue() ? <FontAwesomeIcon icon={faCircleCheck} className="text-success"/> :<FontAwesomeIcon icon={faXmarkCircle} className="text-error"/>,
+
       header: () => <span>Connected</span>,
     },
     {
@@ -39,7 +42,6 @@ const ChargerTable = () => {
       id: 'statusTime',
     },
   ]
-  // console.log("THIS WAS HERE")
 
   const [chargers, setChargers] = useState([])
   const [allChargers, setAllChargers] = useState([])
@@ -49,7 +51,7 @@ const ChargerTable = () => {
   const loadData = async () => {
     const res = await api.getChargers();
     if (res.error){
-      return alert(res.error) // TODO: Make an alert
+      return
     }
     
       const chargerData = await Promise.all(res.data.map(async charger => {
@@ -102,9 +104,9 @@ const ChargerTable = () => {
   else {
     return (
       <div className="w-full">
-        <div className="form-control w-full max-w-xs">
+        <div className="form-control w-full max-w-xs mb-8">
           <label className="label">
-            <span className="label-text">Search for charger or status</span>
+            <span className="label-text text-lg">Search for charger or status</span>
           </label>
           <input type="text" placeholder="Search" onInput={(e) => {setSearchFilter(e.target.value); updateFilter()}} className="input input-bordered w-full max-w-xs" />
         </div>
