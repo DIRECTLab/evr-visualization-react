@@ -1,11 +1,14 @@
 import React from "react";
+import ChargerTable from "../components/chargers/ChargerTable";
 
 const Chargers = () => {
 
   return (
-    <div>
-      <p>THIS IS THE CHARGERS PAGE</p>
-    </div>
+    <div className="prose md:container md:mx-auto mx-auto">
+      <h1 className="text-5xl font-bold">OCPP Data</h1>
+      <ChargerTable />
+      {/* <ChargerMap client:load zoom={13} /> */}
+  </div>
   )
 }
 

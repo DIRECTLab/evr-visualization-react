@@ -1,0 +1,146 @@
+import {
+  flexRender,
+  getCoreRowModel,
+  getSortedRowModel,
+  useReactTable,
+} from '@tanstack/react-table'
+import { useState, useEffect} from 'react'
+import moment from 'moment'
+import api from '../../api'
+import Loading from '../Loading'
+
+
+const ChargerTable = () => {
+  const columns = [
+    {
+      accessorKey: 'chargerName',
+      cell: info => info.getValue(),
+      header: () => <span>Name</span>,
+    },
+    {
+      accessorKey: 'ChargerId',
+      cell: info => info.getValue(),
+      header: () => <span>ID</span>,
+    },
+    {
+      accessorKey: 'connected',
+      cell: info => info.getValue() ? <i className="fa-solid fa-circle-check text-success"></i> : <i className="fa-solid fa-circle-xmark text-error"></i>,
+      header: () => <span>Connected</span>,
+    },
+    {
+      accessorKey: 'status',
+      cell: info => info.getValue(),
+      header: () => <span>Status</span>,
+    },
+    {
+      accessorFn: row => moment(row.statusTime).fromNow(),
+      cell: info => info.getValue(),
+      header: () => <span>Last Status</span>,
+      id: 'statusTime',
+    },
+  ]
+  // console.log("THIS WAS HERE")
+
+  const [chargers, setChargers] = useState([])
+  const [allChargers, setAllChargers] = useState([])
+  const [searchFilter, setSearchFilter] = useState('')
+  const [loading, setLoading] = useState(true)
+  
+  const loadData = async () => {
+    const res = await api.getChargers();
+    if (res.error){
+      return alert(res.error) // TODO: Make an alert
+    }
+    
+      const chargerData = await Promise.all(res.data.map(async charger => {
+        const chargerRes = await api.charger(charger.id).getStatus();
+        if (chargerRes.error){
+          alert(chargerRes.error)
+        }
+        else{
+          return { ...charger, ...chargerRes.data };
+        }
+      }))
+      setAllChargers(chargerData);
+      setChargers(chargerData);
+      setLoading(false);
+  }
+
+  useEffect(() => {
+    loadData()
+  }, [])
+  
+  const updateFilter = () => {
+    if (searchFilter === ''){
+      return setChargers(allChargers)
+    }
+
+    const filtered = allChargers.filter(value => {
+      for (let key of Object.keys(value)){
+        if (`${value[key]}`.toLowerCase().includes(searchFilter.toLowerCase())){
+          return true
+        }
+      }
+      return false
+    })
+    setChargers(filtered)
+  }
+
+  const table = useReactTable({
+    data: chargers,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+  })
+
+
+  if (loading) {
+    return (
+      <Loading />
+    )
+  }
+  else {
+    return (
+      <div className="w-full">
+        <div className="form-control w-full max-w-xs">
+          <label className="label">
+            <span className="label-text">Search for charger or status</span>
+          </label>
+          <input type="text" placeholder="Search" onInput={(e) => {setSearchFilter(e.target.value); updateFilter()}} className="input input-bordered w-full max-w-xs" />
+        </div>
+        <div className="overflow-x-auto w-full">
+          <table className="table table-zebra w-full">
+            <thead>
+              {table.getHeaderGroups().map((headerGroup, header_group_id) => (
+                <tr className="sticky top-0" key={header_group_id}>
+                {headerGroup.headers.map((header, header_id) => (
+                    <th key={`header-${header_id}-header-group-${header_group_id}`}>
+                      {header.isPlaceholder ? null : <div className={ header.column.getCanSort() ? 'cursor-pointer select-none' : ''} >{flexRender(header.column.columnDef.header, header.getContext())}</div>}
+                      {{ asc: <i className="fa-solid fa-arrow-down"></i>, desc: <i className="fa-solid fa-arrow-up"></i> }[header.column.getIsSorted()] ?? null}
+                    </th>
+                ))}
+                </tr>
+              ))}
+            </thead>
+            <tbody>
+              {table.getRowModel().rows.map((row, rowIndex) => (
+                <tr
+                  className="hover cursor-pointer select-none"
+                  onClick={() => { window.location.href = `/ocpp/charger?id=${row.original.ChargerId}` }}
+                  key={rowIndex}
+                >
+                  {row.getVisibleCells().map((cell, colIndex) => (
+                    <td key={`charger-table-${rowIndex}-${colIndex}`}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      
+    )
+  }
+}
+
+export default ChargerTable
