@@ -93,7 +93,8 @@ const MonitorChart = () => {
       sum += sma50Data.data[i].acPower
       sumArray.push(sum)
     }
-    return sumArray
+    // Since data is sorted in descending order, we will need to reverse it
+    return sumArray.reverse()
   }
 
   const loadData = async () => {
