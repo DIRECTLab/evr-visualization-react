@@ -40,14 +40,14 @@ export const options = {
   scales: {
     y: {
       min: 0,
-      max: 50,
+      suggestedMax: 50,
     },
   },
   maintainAspectRatio: true,
 }
 
 
-const YaskawaPowerChart = () => {
+const GustavVoltageChart = () => {
   const [chartData, setChartData] = useState({});
   const [loading, setLoading] = useState(true)
   const chartRef = useRef(null);
@@ -55,20 +55,20 @@ const YaskawaPowerChart = () => {
 
   
   const loadData = async () => {
-    const res = await api.ems.yaskawa.get100()
+    const res = await api.ems.gustav_klein.get100()
     if (res.error){
       setLoading(false)
     }
     
     const labels = res.data.map(data => moment(data.updatedAt).format('LTS')).reverse()
-    const data = res.data.map(data => data.activeAcPower).reverse()
+    const data = res.data.map(data => data.measuredVoltage).reverse()
 
 
     setChartData({
       labels: labels,
       datasets: [
         {
-          label: "Active AC Power",
+          label: "Measured Voltage",
           data: data,
           borderColor: 'rgba(75,192,192,1)',
           backgroundColor: 'rgba(75,192,192,0.1)'
@@ -112,4 +112,4 @@ const YaskawaPowerChart = () => {
   }
 }
 
-export default YaskawaPowerChart
+export default GustavVoltageChart

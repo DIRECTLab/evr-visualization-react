@@ -47,7 +47,7 @@ export const options = {
 }
 
 
-const YaskawaPowerChart = () => {
+const SymoPowerChart = () => {
   const [chartData, setChartData] = useState({});
   const [loading, setLoading] = useState(true)
   const chartRef = useRef(null);
@@ -55,20 +55,20 @@ const YaskawaPowerChart = () => {
 
   
   const loadData = async () => {
-    const res = await api.ems.yaskawa.get100()
+    const res = await api.ems.fronius.specific('symo').get100()
     if (res.error){
       setLoading(false)
     }
     
     const labels = res.data.map(data => moment(data.updatedAt).format('LTS')).reverse()
-    const data = res.data.map(data => data.activeAcPower).reverse()
+    const data = res.data.map(data => (data.acPower / 1000)).reverse()
 
 
     setChartData({
       labels: labels,
       datasets: [
         {
-          label: "Active AC Power",
+          label: "AC Power",
           data: data,
           borderColor: 'rgba(75,192,192,1)',
           backgroundColor: 'rgba(75,192,192,0.1)'
@@ -112,4 +112,4 @@ const YaskawaPowerChart = () => {
   }
 }
 
-export default YaskawaPowerChart
+export default SymoPowerChart
