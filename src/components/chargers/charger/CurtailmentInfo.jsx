@@ -46,12 +46,12 @@ const CurtailmentInfo = ({id}) => {
   }
   else {
     return (
-      <div class="stats shadow">
-        <div class="stat">
-          <div class="stat-title font-bold text-xl">{chargerDetails.id}</div>
-          <div class="stat-value text-md pb-4">{chargerDetails.chargerName}</div>
-          <div class="stat-title font-bold text-xl">Current Curtailment</div>
-          <div class="stat-value">{curValue} {curValue ? 'kW' : 'Not Set'}</div>
+      <div className="stats shadow">
+        <div className="stat">
+          <div className="stat-title font-bold text-xl">{chargerDetails.id}</div>
+          <div className="stat-value text-md pb-4">{chargerDetails.chargerName}</div>
+          <div className="stat-title font-bold text-xl">Current Curtailment</div>
+          <div className="stat-value">{curValue} {curValue ? 'kW' : 'Not Set'}</div>
         </div>
       </div>
     )
