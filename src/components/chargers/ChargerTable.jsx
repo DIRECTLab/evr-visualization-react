@@ -10,6 +10,7 @@ import api from '../../api'
 import Loading from '../Loading'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleCheck, faXmarkCircle } from '@fortawesome/free-regular-svg-icons'
+import { Link, Navigate, Route, useNavigate } from 'react-router-dom'
 
 const ChargerTable = () => {
   const columns = [
@@ -95,6 +96,11 @@ const ChargerTable = () => {
     getSortedRowModel: getSortedRowModel(),
   })
 
+  let navigate = useNavigate()
+  const routeChange = (path) => {
+    navigate(path)
+  }
+
 
   if (loading) {
     return (
@@ -128,7 +134,7 @@ const ChargerTable = () => {
               {table.getRowModel().rows.map((row, rowIndex) => (
                 <tr
                   className="hover cursor-pointer select-none"
-                  onClick={() => { window.location.href = `/ocpp/charger?id=${row.original.ChargerId}` }}
+                  onClick={() => routeChange(`/chargers/charger/${row.original.ChargerId}`)}
                   key={rowIndex}
                 >
                   {row.getVisibleCells().map((cell, colIndex) => (

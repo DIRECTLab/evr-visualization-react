@@ -1,0 +1,38 @@
+import React from "react";
+import { useParams } from "react-router-dom";
+import CurtailmentInfo from "../components/chargers/charger/CurtailmentInfo";
+
+const Charger = () => {
+
+  const { id } = useParams()
+
+  return (
+    <div class="prose md:container md:mx-auto mx-auto mb-8">
+      <h1 className="text-4xl font-bold mb-8">Charger Details</h1>
+      
+      <CurtailmentInfo id={id} />
+
+      <div class="divider"></div>
+
+      <h2 className="text-2xl font-bold">Curtailment - Last 24 Hours</h2>
+      {/* <CurtailmentChart /> */}
+
+      <div className="divider" />
+      {/* <StatusTable /> */}
+
+      <div className="divider"></div>
+      
+      {/* <h2>Current Curtailment</h2> */}
+
+      <h2 className="text-2xl font-bold">Transactions</h2>
+      {/* <TransactionTable/> */}
+
+      <div className="divider"></div> 
+
+      <h2 className="text-2xl font-bold">Charge Profiles</h2>
+      {/* <ChargeProfileTable /> */}
+      </div>
+  )
+} 
+
+export default Charger
