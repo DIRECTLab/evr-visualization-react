@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import CurtailmentChart from "../components/chargers/charger/CurtailmentChart";
 import CurtailmentInfo from "../components/chargers/charger/CurtailmentInfo";
 import StatusTable from "../components/chargers/charger/StatusTable";
+import TransactionTable from "../components/chargers/charger/TransactionTable";
 
 const Charger = () => {
 
@@ -27,7 +28,7 @@ const Charger = () => {
       {/* <h2>Current Curtailment</h2> */}
 
       <h2 className="text-2xl font-bold">Transactions</h2>
-      {/* <TransactionTable/> */}
+      <TransactionTable id={id}/>
 
       <div className="divider"></div> 
 

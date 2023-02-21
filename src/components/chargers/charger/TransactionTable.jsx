@@ -8,42 +8,62 @@ import { useState, useEffect} from 'react'
 import moment from 'moment'
 import api from '../../../api'
 import Loading from '../../Loading'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCircleCheck, faXmarkCircle } from '@fortawesome/free-regular-svg-icons'
 
-const StatusTable = ({id}) => {
+const TransactionTable = ({id}) => {
   const columns = [
     {
-      accessorKey: 'status',
+      accessorKey: 'id',
       cell: info => info.getValue(),
-      header: () => <span>Status</span>,
+      header: () => <span>ID</span>,
     },
     {
-      accessorKey: 'connected',
-      cell: info => info.getValue() ? <FontAwesomeIcon icon={faCircleCheck} className="text-success"/> :<FontAwesomeIcon icon={faXmarkCircle} className="text-error"/>,
-      header: () => <span>Connected</span>,
+      accessorKey: 'meterStart',
+      cell: info => info.getValue(),
+      header: () => <span>Meter Start</span>,
     },
     {
-      accessorFn: row => moment(row.statusTime).format('lll'),
+      accessorKey: 'meterStop',
       cell: info => info.getValue(),
-      header: () => <span>Last Status Time</span>,
-      id: 'statusTime',
+      header: () => <span>Meter Stop</span>,
+    },
+    {
+      accessorKey: 'powerConsumed',
+      cell: info => info.getValue(),
+      header: () => <span>Power Consumed</span>,
+    },
+    {
+      accessorKey: 'connectorId',
+      cell: info => info.getValue(),
+      header: () => <span>Connector ID</span>,
+    },
+    {
+      accessorFn: row => moment(row.timestampStart).format('lll'),
+      cell: info => info.getValue(),
+      header: () => <span>Start Time</span>,
+      id: 'timestampStart',
+    },
+    {
+      accessorFn: row => moment(row.timestampEnd).format('lll'),
+      cell: info => info.getValue(),
+      header: () => <span>End Time</span>,
+      id: 'timestampEnd',
     },
   ]
+  
 
-  const [statuses, setStatuses] = useState([])
-  const [allStatuses, setAllStatuses] = useState([])
+  const [transactions, setTransactions] = useState([])
+  const [allTransactions, setAllTransactions] = useState([])
   const [searchFilter, setSearchFilter] = useState('')
   const [loading, setLoading] = useState(true)
 
   const updateFilter = () => {
     if (searchFilter === ''){
-      return setStatuses(allStatuses)
+      return setTransactions(allTransactions)
     }
 
-    const filtered = allStatuses.filter(value => {
+    const filtered = allTransactions.filter(value => {
       for (let key of Object.keys(value)){
-        if (key === 'statusTime' && moment(`${value[key]}`).format('lll').includes(searchFilter)){
+        if ((key === 'timestampStart' || key === 'timestampEnd') && moment(`${value[key]}`).format('lll').includes(searchFilter)){
           return true
         }
         if (`${value[key]}`.toLowerCase().includes(searchFilter.toLowerCase())){
@@ -52,18 +72,19 @@ const StatusTable = ({id}) => {
       }
       return false
     })
-    setStatuses(filtered)
+    setTransactions(filtered)
   }
 
 
-  const loadData = async () => {
-    const chargerStatus = await api.charger(id).getAllStatus();
 
-    if (chargerStatus.error){
-      return alert(chargerStatus.error)
+  const loadData = async () => {
+    const chargerTransactionsRes = await api.charger(id).getTransactions();
+
+    if (chargerTransactionsRes.error){
+      return alert(chargerTransactionsRes.error)
     }
-    setAllStatuses(chargerStatus.data);
-    setStatuses(chargerStatus.data);
+    setAllTransactions(chargerTransactionsRes.data);
+    setTransactions(chargerTransactionsRes.data);
     setLoading(false);
   }
 
@@ -73,7 +94,7 @@ const StatusTable = ({id}) => {
   
 
   const table = useReactTable({
-    data: statuses,
+    data: transactions,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -128,4 +149,4 @@ const StatusTable = ({id}) => {
   }
 }
 
-export default StatusTable
+export default TransactionTable
