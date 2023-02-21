@@ -1,5 +1,6 @@
 import React from "react";
 import { useParams } from "react-router-dom";
+import ChargeProfileTable from "../components/chargers/charger/ChargeProfileTable";
 import CurtailmentChart from "../components/chargers/charger/CurtailmentChart";
 import CurtailmentInfo from "../components/chargers/charger/CurtailmentInfo";
 import StatusTable from "../components/chargers/charger/StatusTable";
@@ -33,7 +34,7 @@ const Charger = () => {
       <div className="divider"></div> 
 
       <h2 className="text-2xl font-bold">Charge Profiles</h2>
-      {/* <ChargeProfileTable /> */}
+      <ChargeProfileTable id={id}/>
       </div>
   )
 } 
