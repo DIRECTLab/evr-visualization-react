@@ -8,6 +8,8 @@ import EMS from './pages/EMS'
 import Map from './pages/Map';
 import Charger from './pages/Charger';
 import Bus from './pages/Bus';
+import GustavKlein from './pages/EMS/GustavKlein';
+import Yaskawa from './pages/EMS/Yaskawa';
 
 function App() {
   return (
@@ -20,8 +22,14 @@ function App() {
         <Route path="/chargers/charger/:id" element={<Charger />} />
         <Route path="/buses" element={<Buses />} />
         <Route path="/buses/bus/:id" element={<Bus />} />
-        <Route path="/ems" element={<EMS />} />
         <Route path="/map" element={<Map />} />
+        <Route path="/ems" element={<EMS />} />
+        <Route path="/ems/gustav-klein" element={<GustavKlein />} />
+        <Route path="/ems/yaskawa" element={<Yaskawa />} />
+        <Route path="/ems/fronius" element={<EMS />} />
+        <Route path="/ems/sma50" element={<EMS />} />
+        <Route path="/ems/sma7" element={<EMS />} />
+
       </Routes>
     </BrowserRouter>
   </>

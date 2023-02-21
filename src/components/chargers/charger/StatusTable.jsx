@@ -90,7 +90,7 @@ const StatusTable = ({id}) => {
       <div className="w-full">
         <div className="form-control w-full max-w-xs mb-8">
           <label className="label">
-            <span className="label-text text-lg">Search for charger or status</span>
+            <span className="label-text text-lg">Search for status or time</span>
           </label>
           <input type="text" placeholder="Search" onInput={(e) => {setSearchFilter(e.target.value); updateFilter()}} className="input input-bordered w-full max-w-xs" />
         </div>

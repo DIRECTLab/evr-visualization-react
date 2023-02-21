@@ -9,7 +9,7 @@ import moment from 'moment'
 import api from '../../../api'
 import Loading from '../../Loading'
 
-const TransactionTable = ({id}) => {
+const DataTable = () => {
   const columns = [
     {
       accessorKey: 'id',
@@ -17,74 +17,63 @@ const TransactionTable = ({id}) => {
       header: () => <span>ID</span>,
     },
     {
-      accessorKey: 'meterStart',
-      cell: info => info.getValue(),
-      header: () => <span>Meter Start</span>,
+      accessorKey: 'measuredAmp',
+      cell: info => parseFloat(info.getValue().toFixed(2)),
+      header: () => <span>Measured Amp</span>,
     },
     {
-      accessorKey: 'meterStop',
-      cell: info => info.getValue(),
-      header: () => <span>Meter Stop</span>,
+      accessorKey: 'measuredPower',
+      cell: info => parseFloat(info.getValue().toFixed(2)),
+      header: () => <span>Measured Power</span>,
     },
     {
-      accessorKey: 'powerConsumed',
-      cell: info => info.getValue(),
-      header: () => <span>Power Consumed</span>,
+      accessorKey: 'measuredVoltage',
+      cell: info => parseFloat(info.getValue().toFixed(2)),
+      header: () => <span>Measured Voltage</span>,
     },
     {
-      accessorKey: 'connectorId',
+      accessorFn: row => moment(row.updatedAt).fromNow(),
       cell: info => info.getValue(),
-      header: () => <span>Connector ID</span>,
-    },
-    {
-      accessorFn: row => moment(row.timestampStart).format('lll'),
-      cell: info => info.getValue(),
-      header: () => <span>Start Time</span>,
-      id: 'timestampStart',
-    },
-    {
-      accessorFn: row => moment(row.timestampEnd).format('lll'),
-      cell: info => info.getValue(),
-      header: () => <span>End Time</span>,
-      id: 'timestampEnd',
+      header: () => <span>Last Updated</span>,
+      id: 'updatedAt',
     },
   ]
   
-
-  const [transactions, setTransactions] = useState([])
-  const [allTransactions, setAllTransactions] = useState([])
+  
+  const [data, setData] = useState([])
+  const [allData, setAllData] = useState([])
   const [searchFilter, setSearchFilter] = useState('')
   const [loading, setLoading] = useState(true)
 
   const updateFilter = () => {
     if (searchFilter === ''){
-      return setTransactions(allTransactions)
+      return setData(allData)
     }
 
-    const filtered = allTransactions.filter(value => {
+    const filtered = allData.filter(value => {
       for (let key of Object.keys(value)){
-        if ((key === 'timestampStart' || key === 'timestampEnd') && moment(`${value[key]}`).format('lll').includes(searchFilter)){
-          return true
-        }
         if (`${value[key]}`.toLowerCase().includes(searchFilter.toLowerCase())){
           return true
         }
       }
       return false
     })
-    setTransactions(filtered)
+    setData(filtered)
   }
 
 
 
-  const loadData = async () => {
-    const chargerTransactionsRes = await api.charger(id).getTransactions();
 
-    if (chargerTransactionsRes.error){
-      return alert(chargerTransactionsRes.error)
-    }
-    setAllTransactions(chargerTransactionsRes.data);
-    setTransactions(chargerTransactionsRes.data);
+  const loadData = async () => {
+    const res = await api.ems.gustav_klein.getAll();
+    if (res.error) {
+      return alert(res.error)
+    }    
+
+    const data = await Promise.all(res.data);
+
+    setAllData(data);
+    setData(data);
     setLoading(false);
   }
 
@@ -94,7 +83,7 @@ const TransactionTable = ({id}) => {
   
 
   const table = useReactTable({
-    data: transactions,
+    data: data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -111,7 +100,7 @@ const TransactionTable = ({id}) => {
       <div className="w-full">
         <div className="form-control w-full max-w-xs mb-8">
           <label className="label">
-            <span className="label-text text-lg">Search for a transaction value</span>
+            <span className="label-text text-lg">Search for specific data</span>
           </label>
           <input type="text" placeholder="Search" onInput={(e) => {setSearchFilter(e.target.value); updateFilter()}} className="input input-bordered w-full max-w-xs" />
         </div>
@@ -149,4 +138,4 @@ const TransactionTable = ({id}) => {
   }
 }
 
-export default TransactionTable
+export default DataTable

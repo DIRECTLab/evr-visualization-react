@@ -103,6 +103,19 @@ const api = {
       current: r('get', 'evr/sma7?limit=1'),
       getStatus: r('get', 'alive/sma7')
     })
+  }),
+  viriciti: ({
+    getAll: r('get', 'viriciti/bus/all'),
+    specific: (busId) => ({
+      getBus: r('get', `viriciti/bus/${busId}`),
+      getCurrent: r('get', `viriciti/current/${busId}`),
+      getGPS: r('get', `viriciti/gps/${busId}`),
+      getOdo: r('get', `viriciti/odo/${busId}`),
+      getPower: r('get', `viriciti/power/${busId}`),
+      getSOC: r('get', `viriciti/soc/${busId}`),
+      getSpeed: r('get', `viriciti/speed/${busId}`),
+      getVoltage: r('get', `viriciti/voltage/${busId}`)
+    })
   })
 }
 
