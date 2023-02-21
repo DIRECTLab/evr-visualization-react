@@ -7,6 +7,7 @@ import Buses from './pages/Buses';
 import EMS from './pages/EMS'
 import Map from './pages/Map';
 import Charger from './pages/Charger';
+import Bus from './pages/Bus';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/chargers" element={<Chargers />} />
         <Route path="/chargers/charger/:id" element={<Charger />} />
         <Route path="/buses" element={<Buses />} />
+        <Route path="/buses/bus/:id" element={<Bus />} />
         <Route path="/ems" element={<EMS />} />
         <Route path="/map" element={<Map />} />
       </Routes>
