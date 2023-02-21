@@ -38,7 +38,13 @@ export const options = {
       position: 'top',
     },
   },
+  scales: {
+    y: {
+      min: 0,
+    },
+  },
   maintainAspectRatio: true,
+  
 }
 
 
@@ -111,7 +117,7 @@ const CurtailmentChart = ({id}) => {
           data={chartData}
           options={options}
           redraw={false}
-          height={"150px"}
+          height={"75px"}
         />
       </div>
     )
