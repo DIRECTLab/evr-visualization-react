@@ -23,6 +23,7 @@ const BusMap = () => {
 
 
   const loadData = async () => {
+    // Vericiti Busses
     const busesRes = await api.viriciti.getAll();
     if (busesRes.error){
       setLoading(false)
@@ -53,9 +54,41 @@ const BusMap = () => {
         return bus
       }
     }))
-    const filtered = output.filter(element => element)
+    // 
+
+    // New Flyer Busses
+    const newFlyerRes = await api.newflyer.getAll()
+    if (newFlyerRes.error) {
+      setLoading(false)
+    }
+    const flyerOutput = await Promise.all(newFlyerRes.data.map(async (bus) => {
+      let lat = null
+      let long = null
+      let soc = null
+      try {
+        const specificBusRes = await api.newflyer.specific(bus.id).getRoute()
+        lat = specificBusRes.data.lastRoute.latitude
+        long = specificBusRes.data.lastRoute.longitude
+        soc = specificBusRes.data.lastRoute.soc
+      } catch{}
+
+      bus.latitude = +lat
+      bus.longitude = +long
+      bus.soc = +soc
+      bus.vid = bus.id
+      return bus
+    }))
+    // 
+
+    const allBuses = [
+      ...output,
+      ...flyerOutput
+    ]
+
+    const filtered = allBuses.filter(element => element)
 
     setBuses(filtered)
+
     setLoading(false)
   }
 
