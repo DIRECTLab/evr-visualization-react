@@ -175,7 +175,6 @@ const VericitiBusTable = () => {
       return bus
     }))
     
-    console.log(busesRes.data)
     setAllBuses(output)
     setBuses(output)
     setLoading(false);
