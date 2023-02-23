@@ -2,12 +2,9 @@ import React from "react";
 import { useEffect, useState } from "react"
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet"
 import 'leaflet/dist/leaflet.css'
-import icon from 'leaflet/dist/images/marker-icon.png';
 import L from 'leaflet'
 import Loading from "../Loading";
 import api from "../../api";
-import { faBus } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 
 
@@ -41,9 +38,18 @@ const BusMap = () => {
           long = gpsRes.data[0].long
         }
       } catch{}
+
+      let soc = null
+      try {
+        const socRes = await api.viriciti.specific(bus.vid).getSOC()
+        if (!socRes.error) {
+          soc = socRes.data[0].value
+        }
+      } catch{}
       if (lat && long) {
         bus.latitude = lat
         bus.longitude = long
+        bus.soc = soc
         return bus
       }
     }))
@@ -85,15 +91,11 @@ const BusMap = () => {
 
               <Popup>
                 Bus vehicle id: {bus.vid}<br />
+                State of Charge: {bus.soc}<br />
               </Popup>
             </Marker>
           )
         )}
-        {/* <Marker position={center}>
-          <Popup>
-            A pretty CSS3 popup. <br /> Easily customizable.
-          </Popup>
-        </Marker> */}
     </MapContainer>
     )
   }
