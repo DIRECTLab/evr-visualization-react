@@ -46,7 +46,7 @@ const VericitiBusTable = () => {
     {
       accessorKey: 'current',
       cell: info => Math.round(info.getValue()),
-      header: () => <span>Current</span>,
+      header: () => <span>Current (Amps)</span>,
     },
     {
       accessorKey: 'energyUsedPerDay',
@@ -248,7 +248,7 @@ const VericitiBusTable = () => {
               {table.getRowModel().rows.map((row, rowIndex) => (
                 <tr
                   className="hover cursor-pointer select-none"
-                  onClick={() => routeChange(`/buses/newflyer/${row.original.BusId}`)}
+                  // onClick={() => routeChange(`/buses/newflyer/${row.original.BusId}`)}
                   key={rowIndex}
                 >
                   {row.getVisibleCells().map((cell, colIndex) => (

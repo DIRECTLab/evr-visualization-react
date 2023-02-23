@@ -124,7 +124,7 @@ const BusMap = () => {
 
               <Popup>
                 Bus vehicle id: {bus.vid}<br />
-                State of Charge: {bus.soc}<br />
+                State of Charge: {bus.soc}%<br />
               </Popup>
             </Marker>
           )
