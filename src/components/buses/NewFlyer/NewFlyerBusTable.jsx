@@ -6,12 +6,12 @@ import {
 } from '@tanstack/react-table'
 import { useState, useEffect} from 'react'
 import moment from 'moment'
-import api from '../../api'
-import Loading from '../Loading'
+import api from '../../../api'
+import Loading from '../../Loading'
 import { useNavigate } from 'react-router-dom'
 
 
-const BusTable = () => {
+const NewFlyerBusTable = () => {
   const columns = [
     {
       accessorKey: 'BusId',
@@ -107,7 +107,7 @@ const BusTable = () => {
 
     const filtered = allBuses.filter(value => {
       for (let key of Object.keys(value)){
-        if (key === 'gpsFixTime' && moment(`${value[key]}`).format('lll').includes(searchFilter())){
+        if (key === 'gpsFixTime' && moment(`${value[key]}`).format('lll').includes(searchFilter)){
           return true
         }
         if (`${value[key]}`.toLowerCase().includes(searchFilter.toLowerCase())){
@@ -164,7 +164,7 @@ const BusTable = () => {
               {table.getRowModel().rows.map((row, rowIndex) => (
                 <tr
                   className="hover cursor-pointer select-none"
-                  onClick={() => routeChange(`/buses/bus/${row.original.BusId}`)}
+                  onClick={() => routeChange(`/buses/newflyer/${row.original.BusId}`)}
                   key={rowIndex}
                 >
                   {row.getVisibleCells().map((cell, colIndex) => (
@@ -182,4 +182,4 @@ const BusTable = () => {
   }
 }
 
-export default BusTable
+export default NewFlyerBusTable

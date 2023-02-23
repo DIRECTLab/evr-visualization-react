@@ -14,8 +14,8 @@ import {
   LineController,
 } from "chart.js"
 import { Line } from "react-chartjs-2";
-import api from "../../api";
-import Loading from "../Loading";
+import api from "../../../api";
+import Loading from "../../Loading";
 import { getCoreRowModel, getSortedRowModel, useReactTable, flexRender } from "@tanstack/react-table";
 
 Chart.register(

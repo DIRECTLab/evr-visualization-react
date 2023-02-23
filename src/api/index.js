@@ -114,7 +114,10 @@ const api = {
       getPower: r('get', `viriciti/power/${busId}`),
       getSOC: r('get', `viriciti/soc/${busId}`),
       getSpeed: r('get', `viriciti/speed/${busId}`),
-      getVoltage: r('get', `viriciti/voltage/${busId}`)
+      getVoltage: r('get', `viriciti/voltage/${busId}`),
+      getEnergyUsedPerDay: r('get', `viriciti/energy_used_per_day/${busId}`),
+      getDistanceDrivenPerDay: r('get', `viriciti/distance_driven_per_day/${busId}`)
+
     })
   })
 }

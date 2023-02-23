@@ -3,13 +3,13 @@ import './App.css';
 import NavigationBar from './components/NavigationBar';
 import Chargers from './pages/Chargers';
 import Home from './pages/Home'
-import Buses from './pages/Buses';
+import Buses from './pages/buses/Buses';
 import EMS from './pages/EMS'
 import Map from './pages/Map';
 import Charger from './pages/Charger';
-import Bus from './pages/Bus';
 import GustavKlein from './pages/EMS/GustavKlein';
 import Yaskawa from './pages/EMS/Yaskawa';
+import NewFlyerBus from './pages/buses/NewFlyerBus';
 
 function App() {
   return (
@@ -21,7 +21,7 @@ function App() {
         <Route path="/chargers" element={<Chargers />} />
         <Route path="/chargers/charger/:id" element={<Charger />} />
         <Route path="/buses" element={<Buses />} />
-        <Route path="/buses/bus/:id" element={<Bus />} />
+        <Route path="/buses/newflyer/:id" element={<NewFlyerBus />} />
         <Route path="/map" element={<Map />} />
         <Route path="/ems" element={<EMS />} />
         <Route path="/ems/gustav-klein" element={<GustavKlein />} />

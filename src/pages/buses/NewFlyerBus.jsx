@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom"
-import SpecificBus from "../components/buses/SpecificBus"
+import SpecificBus from "../../components/buses/NewFlyer/SpecificBus"
 
-const Bus = () => {
+const NewFlyerBus = () => {
 
   const { id } = useParams()
   return (
@@ -13,4 +13,4 @@ const Bus = () => {
   )
 }
 
-export default Bus
+export default NewFlyerBus
