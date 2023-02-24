@@ -13,6 +13,7 @@ import NewFlyerBus from './pages/buses/NewFlyerBus';
 import Fronius from './pages/EMS/Fronius';
 import SpecificFroniusModel from './pages/EMS/SpecificFroniusModel';
 import Sma50 from './pages/EMS/Sma50';
+import Sma7 from './pages/EMS/Sma7';
 
 function App() {
   return (
@@ -32,7 +33,7 @@ function App() {
         <Route path="/ems/fronius" element={<Fronius />} />
         <Route path="/ems/fronius/:id" element={<SpecificFroniusModel />} />
         <Route path="/ems/sma50" element={<Sma50 />} />
-        <Route path="/ems/sma7" element={<EMS />} />
+        <Route path="/ems/sma7" element={<Sma7 />} />
 
       </Routes>
     </BrowserRouter>

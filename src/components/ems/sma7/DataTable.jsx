@@ -5,7 +5,6 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 import { useState, useEffect} from 'react'
-import moment from 'moment'
 import api from '../../../api'
 import Loading from '../../Loading'
 
@@ -18,110 +17,69 @@ const DataTable = () => {
       header: () => <span>ID</span>,
     },
     {
-      accessorKey: 'acAbVoltage',
-      cell: info => parseFloat(info.getValue().toFixed(2)),
-      header: () => <span>AC Ab Voltage</span>,
-    },
-    {
       accessorKey: 'acAnVoltage',
-      cell: info => parseFloat(info.getValue().toFixed(2)),
+      cell: info => parseFloat(info.getValue())?.toFixed(2),
       header: () => <span>AC An Voltage</span>,
     },
     {
-      accessorKey: 'acBcVoltage',
-      cell: info => parseFloat(info.getValue().toFixed(2)),
-      header: () => <span>AC Bc Voltage</span>,
+      accessorKey: 'acFrequency',
+      cell: info => parseFloat(info.getValue()?.toFixed(2)),
+      header: () => <span>AC Frequency</span>,
     },
     {
-      accessorKey: 'acBnVoltage',
-      cell: info => parseFloat(info.getValue().toFixed(2)),
-      header: () => <span>AC Bn Voltage</span>,
+      accessorKey: 'acLifetime',
+      cell: info => parseFloat(info.getValue()?.toFixed(2)),
+      header: () => <span>AC Lifetime</span>,
     },
     {
-      accessorKey: 'acCaVoltage',
-      cell: info => parseFloat(info.getValue().toFixed(2)),
-      header: () => <span>AC Ca Voltage</span>,
+      accessorKey: 'acPhaseACurrent',
+      cell: info => parseFloat(info.getValue()?.toFixed(2)),
+      header: () => <span>AC Phase A Current</span>,
     },
     {
-      accessorKey: 'acCnVoltage',
-      cell: info => parseFloat(info.getValue().toFixed(2)),
-      header: () => <span>AC Cn Voltage</span>,
+      accessorKey: 'acPower',
+      cell: info => parseFloat(info.getValue()?.toFixed(2)),
+      header: () => <span>AC Power</span>,
+    },
+    {
+      accessorKey: 'acTotalCurrent',
+      cell: info => parseFloat(info.getValue()?.toFixed(2)),
+      header: () => <span>AC Total Current</span>,
+    },
+    {
+      accessorKey: 'apparentPower',
+      cell: info => parseFloat(info.getValue()?.toFixed(2)),
+      header: () => <span>Apparent Power</span>,
+    },
+    {
+      accessorKey: 'dcCurrent',
+      cell: info => parseFloat(info.getValue()?.toFixed(2)),
+      header: () => <span>DC Current</span>,
+    },
+    {
+      accessorKey: 'dcPower',
+      cell: info => parseFloat(info.getValue()?.toFixed(2)),
+      header: () => <span>DC Power</span>,
+    },
+    {
+      accessorKey: 'dcVoltage',
+      cell: info => parseFloat(info.getValue()?.toFixed(2)),
+      header: () => <span>DC Voltage</span>,
+    },
+    {
+      accessorKey: 'powerFactor',
+      cell: info => parseFloat(info.getValue()?.toFixed(2)),
+      header: () => <span>Power Factor</span>,
+    },
+    {
+      accessorKey: 'reactivePower',
+      cell: info => parseFloat(info.getValue()?.toFixed(2)),
+      header: () => <span>Reactive Power</span>,
     },
     {
       accessorKey: 'status',
       cell: info => info.getValue() === 'MPP (Running Normal)' ? <i class="fa-solid fa-circle-check text-success"></i> : <i class="fa-solid fa-circle-xmark text-error"></i>,
       header: () => <span>Running</span>,
-    },
-    {
-      accessorKey: 'acFrequency',
-      cell: info => parseFloat(info.getValue().toFixed(2)),
-      header: () => <span>AC Frequency</span>,
-    },
-    {
-      accessorKey: 'acLifetime',
-      cell: info => parseFloat(info.getValue().toFixed(2)),
-      header: () => <span>AC Lifetime</span>,
-    },
-    {
-      accessorKey: 'acPhaseACurrent',
-      cell: info => parseFloat(info.getValue().toFixed(2)),
-      header: () => <span>AC Phase A Current</span>,
-    },
-    {
-      accessorKey: 'acPhaseBCurrent',
-      cell: info => info.getValue(),
-      header: () => <span>AC Phase B Current</span>,
-    },
-    {
-      accessorKey: 'acPhaseCCurrent',
-      cell: info => parseFloat(info.getValue().toFixed(2)),
-      header: () => <span>AC Phase C Current</span>,
-    },
-    {
-      accessorKey: 'acPower',
-      cell: info => parseFloat(info.getValue().toFixed(2)),
-      header: () => <span>AC Power</span>,
-    },
-    {
-      accessorKey: 'acTotalCurrent',
-      cell: info => parseFloat(info.getValue().toFixed(2)),
-      header: () => <span>AC Total Current</span>,
-    },
-    {
-      accessorKey: 'apparentPower',
-      cell: info => parseFloat(info.getValue().toFixed(2)),
-      header: () => <span>Apparent Power</span>,
-    },
-    {
-      accessorKey: 'dcCurrent',
-      cell: info => parseFloat(info.getValue().toFixed(2)),
-      header: () => <span>DC Current</span>,
-    },
-    {
-      accessorKey: 'dcPower',
-      cell: info => parseFloat(info.getValue().toFixed(2)),
-      header: () => <span>DC Power</span>,
-    },
-    {
-      accessorKey: 'dcVoltage',
-      cell: info => parseFloat(info.getValue().toFixed(2)),
-      header: () => <span>DC Voltage</span>,
-    },
-    {
-      accessorKey: 'powerFactor',
-      cell: info => parseFloat(info.getValue().toFixed(2)),
-      header: () => <span>Power Factor</span>,
-    },
-    {
-      accessorKey: 'reactivePower',
-      cell: info => parseFloat(info.getValue().toFixed(2)),
-      header: () => <span>Reactive Power</span>,
-    },
-    {
-      accessorFn: row => moment(row.updatedAt).fromNow(),
-      cell: info => info.getValue(),
-      header: () => <span>Last Updated</span>,
-      id: 'updatedAt',
     },
   ]
   
@@ -150,7 +108,7 @@ const DataTable = () => {
 
 
   const loadData = async () => {
-    const res = await api.ems.sma50.getAll();
+    const res = await api.ems.sma7.getAll();
     if (res.error) {
       return alert(res.error)
     }
