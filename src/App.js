@@ -12,6 +12,7 @@ import Yaskawa from './pages/EMS/Yaskawa';
 import NewFlyerBus from './pages/buses/NewFlyerBus';
 import Fronius from './pages/EMS/Fronius';
 import SpecificFroniusModel from './pages/EMS/SpecificFroniusModel';
+import Sma50 from './pages/EMS/Sma50';
 
 function App() {
   return (
@@ -30,7 +31,7 @@ function App() {
         <Route path="/ems/yaskawa" element={<Yaskawa />} />
         <Route path="/ems/fronius" element={<Fronius />} />
         <Route path="/ems/fronius/:id" element={<SpecificFroniusModel />} />
-        <Route path="/ems/sma50" element={<EMS />} />
+        <Route path="/ems/sma50" element={<Sma50 />} />
         <Route path="/ems/sma7" element={<EMS />} />
 
       </Routes>
