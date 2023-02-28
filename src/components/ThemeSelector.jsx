@@ -25,8 +25,8 @@ const ThemeSelector = () => {
   }
 
   return (
-    <div className="dropdown dropdown-end w-full h-full">
-      <label tabIndex={0} className="w-full h-full">Theme</label>
+    <div className="dropdown dropdown-end">
+      <label tabIndex={0}>Theme</label>
       <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 mt-4">
         <li><a className="w-full" onClick={() => toggleTheme('garden')}>Garden</a></li> 
         <li><a className="w-full" onClick={() => toggleTheme('forest')}>Forest</a></li>
