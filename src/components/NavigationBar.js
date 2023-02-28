@@ -2,6 +2,7 @@ import React from "react";
 import {
   Link
 } from "react-router-dom";
+import ThemeSelector from "./ThemeSelector";
 const NavigationBar = () => {
   return (
     <>
@@ -16,6 +17,7 @@ const NavigationBar = () => {
                 <li><Link to="/buses">Buses</Link></li>
                 <li><Link to="/ems">EMS</Link></li>
                 <li><Link to="map">Map</Link></li>
+                <li><div className="w-full h-full"><ThemeSelector /></div></li>
             </ul>
           </div>
         </nav>
