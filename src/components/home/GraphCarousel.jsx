@@ -7,6 +7,11 @@ import SymoPowerChart from "../charts/SymoPowerChart";
 import PrimoPowerChart from "../charts/PrimoPowerChart";
 import GustavVoltageChart from "../charts/GustavVoltageChart";
 import Loading from "../Loading";
+import {Swiper, SwiperSlide} from "swiper/react";
+import "swiper/css";
+import "swiper/css/bundle";
+import { Autoplay, Pagination, Navigation } from "swiper";
+
 
 const GraphCarousel = () => {
 
@@ -71,66 +76,80 @@ const GraphCarousel = () => {
     }
   }, [])
 
+  const params = {
+    autoplay: {
+      delay: 10000,
+      disableOnInteraction: false,
+    },
+    pagination: {
+      clickable: true,
+    },
+    slidesPerView: 3,
+    spaceBetween: 8,
+    slidesPerGroup: 3,
+    navigation: true,
+    loop: true,
+    modules: [Autoplay, Pagination, Navigation],
+    className: "w-full content-center items-center"
+  }
+
   if (loading) {
     return <Loading />
   }
   else {
-
     return (
-      <div className="carousel w-full">
-        <div id="slide1" className="carousel-item relative w-full">
-          <div className={`card w-1/3 shadow-xl mx-4 my-8 border-8 border-opacity-40 card-compact pt-1 ${(yaskawaStatus) ? 'border-success' : 'border-error'}`}>
+      <>
+      <Swiper {...params} >
+        <SwiperSlide>
+          <div className={`card shadow-xl mx-4 my-8 border-8 border-opacity-40 card-compact pt-1 ${(yaskawaStatus) ? 'border-success' : 'border-error'}`}>
             <h2 className="card-title mt-0 justify-center">Yaskawa</h2>
             <div className="card-body">
               <YaskawaPowerChart />
             </div>
           </div>
-          <div className={`card w-1/3 shadow-xl mx-4 my-8 border-8 border-opacity-40 card-compact pt-1 ${sma50Status ? 'border-success' : 'border-error'}`} >
+        </SwiperSlide>
+        <SwiperSlide>
+          <div className={`card shadow-xl mx-4 my-8 border-8 border-opacity-40 card-compact pt-1 ${sma50Status ? 'border-success' : 'border-error'}`} >
             <h2 className="card-title mt-0 justify-center">SMA50</h2>
             <div className="card-body">
               <SMA50PowerChart />
             </div>
           </div>
-          <div className={`card w-1/3 shadow-xl mx-4 my-8 border-8 border-opacity-40 card-compact pt-1 ${sma7Status ? 'border-success' : 'border-error'}`}>
+        </SwiperSlide>
+        <SwiperSlide>
+          <div className={`card shadow-xl mx-4 my-8 border-8 border-opacity-40 card-compact pt-1 ${sma7Status ? 'border-success' : 'border-error'}`}>
             <h2 className="card-title mt-0 justify-center">SMA7</h2>
             <div className="card-body">
               <SMA7PowerChart />
             </div>
           </div>
-
-          <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
-            <a href="#slide2" className="btn btn-circle bg-opacity-50 border-none">❮</a> 
-            <a href="#slide2" className="btn btn-circle bg-opacity-50 border-none">❯</a>
-          </div> 
-        </div> 
-        <div id="slide2" className="carousel-item relative w-full">
-
-          <div className={`card w-1/3 shadow-xl mx-4 my-8 border-8 border-opacity-40 card-compact pt-1 ${symoStatus ? 'border-success' : 'border-error'}`}>
+        </SwiperSlide>
+        <SwiperSlide>
+          <div className={`card shadow-xl mx-4 my-8 border-8 border-opacity-40 card-compact pt-1 ${symoStatus ? 'border-success' : 'border-error'}`}>
             <h2 className="card-title mt-0 justify-center">Symo</h2>
             <div className="card-body">
               <SymoPowerChart />
             </div>
           </div>
-          
-          <div className={`card w-1/3 shadow-xl mx-4 my-8 border-8 border-opacity-40 card-compact pt-1 ${primoStatus ? 'border-success' : 'border-error'}`}>
+        </SwiperSlide>
+        <SwiperSlide>
+          <div className={`card shadow-xl mx-4 my-8 border-8 border-opacity-40 card-compact pt-1 ${primoStatus ? 'border-success' : 'border-error'}`}>
             <h2 className="card-title mt-0 justify-center">Primo</h2>
             <div className="card-body">
               <PrimoPowerChart />
             </div>
           </div>
-
-          <div className={`card w-1/3 shadow-xl mx-4 my-8 border-8 border-opacity-40 card-compact pt-1 ${gustavStatus ? 'border-success' : 'border-error'}`}>
+        </SwiperSlide>
+        <SwiperSlide>
+          <div className={`card shadow-xl mx-4 my-8 border-8 border-opacity-40 card-compact pt-1 ${gustavStatus ? 'border-success' : 'border-error'}`}>
             <h2 className="card-title mt-0 justify-center">Gustav</h2>
             <div className="card-body">
               <GustavVoltageChart />
             </div>
           </div>
-          <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
-            <a href="#slide1" className="btn btn-circle bg-opacity-50 border-none">❮</a> 
-            <a href="#slide1" className="btn btn-circle bg-opacity-50 border-none">❯</a>
-          </div>
-        </div>  
-      </div>
+        </SwiperSlide>
+      </Swiper>
+    </>
     )
   }
 }
