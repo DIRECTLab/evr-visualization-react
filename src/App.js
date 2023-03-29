@@ -14,6 +14,7 @@ import Fronius from './pages/EMS/Fronius';
 import SpecificFroniusModel from './pages/EMS/SpecificFroniusModel';
 import Sma50 from './pages/EMS/Sma50';
 import Sma7 from './pages/EMS/Sma7';
+import VericitiBus from './pages/buses/VericitiBus';
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
         <Route path="/chargers/charger/:id" element={<Charger />} />
         <Route path="/buses" element={<Buses />} />
         <Route path="/buses/newflyer/:id" element={<NewFlyerBus />} />
+        <Route path="/buses/vericiti/:id" element={<VericitiBus />} />
         <Route path="/map" element={<Map />} />
         <Route path="/ems" element={<EMS />} />
         <Route path="/ems/gustav-klein" element={<GustavKlein />} />

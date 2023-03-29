@@ -172,8 +172,10 @@ const VericitiBusTable = () => {
       } catch{}
       bus.distanceDrivenPerDay = distanceDrivenPerDay
 
+
       return bus
     }))
+
     
     setAllBuses(output)
     setBuses(output)
@@ -248,7 +250,7 @@ const VericitiBusTable = () => {
               {table.getRowModel().rows.map((row, rowIndex) => (
                 <tr
                   className="hover cursor-pointer select-none"
-                  // onClick={() => routeChange(`/buses/newflyer/${row.original.BusId}`)}
+                  onClick={() => routeChange(`/buses/vericiti/${row.original.vid}`)}
                   key={rowIndex}
                 >
                   {row.getVisibleCells().map((cell, colIndex) => (
