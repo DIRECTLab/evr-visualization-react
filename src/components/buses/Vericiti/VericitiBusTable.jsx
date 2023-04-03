@@ -55,7 +55,7 @@ const VericitiBusTable = () => {
     },
     {
       accessorKey: 'distanceDrivenPerDay',
-      cell: info => Math.round(info.getValue()),
+      // cell: info => Math.round(info.getValue()),
       header: () => <span>Distance driven per day</span>,
     },
     {
@@ -163,14 +163,14 @@ const VericitiBusTable = () => {
       } catch{}
       bus.energyUsedPerDay = energyUsedPerDay
       
-      let distanceDrivenPerDay = null
-      try{
-        const distancePerDayRes = await api.viriciti.specific(bus.vid).getDistanceDrivenPerDay()
-        if (!distancePerDayRes.error) {
-          distanceDrivenPerDay = distancePerDayRes.data[0].value
-        }
-      } catch{}
-      bus.distanceDrivenPerDay = distanceDrivenPerDay
+      // let distanceDrivenPerDay = null
+      // try{
+      //   const distancePerDayRes = await api.viriciti.specific(bus.vid).getDistanceDrivenPerDay()
+      //   if (!distancePerDayRes.error) {
+      //     distanceDrivenPerDay = distancePerDayRes.data[0].value
+      //   }
+      // } catch{}
+      // bus.distanceDrivenPerDay = distanceDrivenPerDay
 
 
       return bus
