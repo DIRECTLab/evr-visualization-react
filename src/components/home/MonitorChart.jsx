@@ -105,8 +105,8 @@ const MonitorChart = () => {
     
     const labels = res.data.map(data => data.time)
     const data = res.data.map(data => data.power)
-
-
+    
+    
     let sumArray = await sumSolarData()
 
 
@@ -122,19 +122,19 @@ const MonitorChart = () => {
       datasets: [
         {
           label: "Utility Power (kW)",
-          data: data,
+          data: data.length > 0 ? data : [],
           borderColor: 'rgba(40, 202, 64, 0.8)',
           backgroundColor: 'rgba(40, 202, 64, 0.1)'
         },
         {
           label: "Total Solar Power (kW)",
-          data: sumArray,
+          data: sumArray.length > 0 ? sumArray : [],
           borderColor: 'rgba(75,192,192,1)',
           backgroundColor: 'rgba(75,192,192,0.1)'
         },
         {
           label: "EVR Load (kW)",
-          data: facPower,
+          data: facPower.length > 0 ? facPower : [],
           borderColor: 'rgba(163, 27, 242, 0.8)',
           backgroundColor: 'rgba(163, 27, 242, 0.1)'
         }
