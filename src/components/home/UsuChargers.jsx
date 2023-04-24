@@ -50,29 +50,34 @@ const UsuChargers = () => {
       charger.cleared = chargerProfileRes?.data?.cleared
       
       // Get Meter Values
-      // const transactionRes = await api.charger(charger.ChargerId).getCurrentTransaction();
-      // if (!transactionRes.data.id) {
-      //   charger.meterValue = ""
-      // }
-      // else {
-      //   const meterValueRes = await api.charger(charger.ChargerId).meterValues(transactionRes.data.id).getMeterValues();
-      //   if (meterValueRes.error) {
-      //     setLoading(false)
-      //     return alert(meterValueRes.error)
-      //   }
-      //   const meterValuesArray = meterValueRes.data[0].MeterValues;
-      //   for (let i = meterValuesArray.length - 1; i >= 0; i--) {
-      //     if (meterValuesArray[i].SampledValues[0].context === "Sample.Periodic") {
-      //       charger.meterValue = meterValuesArray[i].SampledValues[2].value / 1000;
-      //       charger.soc = meterValuesArray[i].SampledValues[0].value
-      //       break;
-      //     }
-      //     else {
-      //       charger.meterValue = ""
-      //       charger.soc = ""
-      //     }
-      //   }    
-      // }
+      const transactionRes = await api.charger(charger.ChargerId).getCurrentTransaction();
+      if (!transactionRes.data.id) {
+        charger.meterValue = ""
+      }
+      else {
+        const meterValueRes = await api.charger(charger.ChargerId).meterValues(transactionRes.data.id).getMeterValues();
+        if (meterValueRes.error) {
+          setLoading(false)
+          return alert(meterValueRes.error)
+        }
+        if (meterValueRes.data.length > 0) {
+          const meterValuesArray = meterValueRes.data[0].MeterValues;
+          for (let i = meterValuesArray.length - 1; i >= 0; i--) {
+            if (meterValuesArray[i].SampledValues[0].context === "Sample.Periodic") {
+              charger.meterValue = meterValuesArray[i].SampledValues[2].value / 1000;
+              charger.soc = meterValuesArray[i].SampledValues[0].value
+              break;
+            }
+            else {
+              charger.meterValue = ""
+              charger.soc = ""
+            }
+          }
+        }
+        else {
+          charger.meterValue = ""
+        }
+      }
     }));
 
     let inManualMode = false;
