@@ -60,18 +60,23 @@ const UsuChargers = () => {
           setLoading(false)
           return alert(meterValueRes.error)
         }
-        const meterValuesArray = meterValueRes.data[0].MeterValues;
-        for (let i = meterValuesArray.length - 1; i >= 0; i--) {
-          if (meterValuesArray[i].SampledValues[0].context === "Sample.Periodic") {
-            charger.meterValue = meterValuesArray[i].SampledValues[2].value / 1000;
-            charger.soc = meterValuesArray[i].SampledValues[0].value
-            break;
+        if (meterValueRes.data.length > 0) {
+          const meterValuesArray = meterValueRes.data[0].MeterValues;
+          for (let i = meterValuesArray.length - 1; i >= 0; i--) {
+            if (meterValuesArray[i].SampledValues[0].context === "Sample.Periodic") {
+              charger.meterValue = meterValuesArray[i].SampledValues[2].value / 1000;
+              charger.soc = meterValuesArray[i].SampledValues[0].value
+              break;
+            }
+            else {
+              charger.meterValue = ""
+              charger.soc = ""
+            }
           }
-          else {
-            charger.meterValue = ""
-            charger.soc = ""
-          }
-        }    
+        }
+        else {
+          charger.meterValue = ""
+        }
       }
     }));
 
@@ -116,12 +121,12 @@ const UsuChargers = () => {
               <div className="stat-value pb-4">{charger.curtailmentLimit} {charger.curtailmentLimit ? 'kW' : 'Not Set'}</div>
               <div className="stat-title font-bold text-xl">Status</div>
               <div className="stat-value text-md pb-4">{charger.status}</div>
-              {charger.meterValue &&
+              {/* {charger.meterValue &&
               <>
                 <div className="stat-title font-bold text-xl">Meter Value</div>
                 <div className="stat-value text-md pb-4">{charger.meterValue} {charger.meterValue ? 'kW' : 'No Data'}</div>
               </>
-              }
+              } */}
               {charger.soc && 
               <>
                 <div className="stat-title font-bold text-xl">Charge Level</div>
