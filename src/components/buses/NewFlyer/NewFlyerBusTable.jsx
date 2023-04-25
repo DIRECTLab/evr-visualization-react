@@ -14,7 +14,7 @@ import { useNavigate } from 'react-router-dom'
 const NewFlyerBusTable = () => {
   const columns = [
     {
-      accessorKey: 'BusId',
+      accessorKey: 'id',
       cell: info => info.getValue(),
       header: () => <span>ID</span>,
     },
@@ -64,7 +64,9 @@ const NewFlyerBusTable = () => {
       header: () => <span>Total Distance</span>,
     },
     {
-      accessorFn: row => moment(row.createdAt).format('lll'),
+      accessorFn: row => {
+        return moment(row.gpsFixTime).format('lll')
+      },
       cell: info => info.getValue(),
       header: () => <span>GPS Fix Time</span>,
       id: 'gpsFixTime',
@@ -90,6 +92,7 @@ const NewFlyerBusTable = () => {
       }
       return { ...routes.data.lastRoute, ...bus };
     }));
+
 
     setBuses(busWithRoutes)
     setAllBuses(busWithRoutes)
