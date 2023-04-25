@@ -55,7 +55,7 @@ const SpecificBus = ({id}) => {
   const [buses, setBuses] = useState([])
   const [allBuses, setAllBuses] = useState([])
   const [searchFilter, setSearchFilter] = useState('')
-  const [daysToSearch, setDaysToSearch] = useState(3)
+  const [daysToSearch, setDaysToSearch] = useState(1)
 
 
   // CHART SETUP and DATA
@@ -65,7 +65,6 @@ const SpecificBus = ({id}) => {
       setLoading(false)
       return alert(busesRes.error)
     }
-
     setBuses(busesRes.data)
     setAllBuses(busesRes.data)
 
