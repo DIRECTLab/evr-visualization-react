@@ -68,7 +68,7 @@ const NewFlyerBus = () => {
       bus = busesRes.data
     let current = null
     try {
-      const currentRes = await api.viriciti.specific(bus.vid).getCurrent()
+      const currentRes = await api.viriciti.specific(bus.vid, 1).getCurrent()
       if (!currentRes.error) {
         current = currentRes.data[0].value
       }
@@ -111,7 +111,7 @@ const NewFlyerBus = () => {
       })
 
 
-      const gpsRes = await api.viriciti.specific(bus.vid).getGPS()
+      const gpsRes = await api.viriciti.specific(bus.vid, 1).getGPS()
       if (!gpsRes.error) {
         gps.lat = gpsRes.data[0].lat
         gps.long = gpsRes.data[0].long
@@ -122,7 +122,7 @@ const NewFlyerBus = () => {
     
     let odo = null
     try {
-      const odoRes = await api.viriciti.specific(bus.vid).getOdo()
+      const odoRes = await api.viriciti.specific(bus.vid, 1).getOdo()
       if (!odoRes.error) {
         odo = odoRes.data[0].value
       }
@@ -132,7 +132,7 @@ const NewFlyerBus = () => {
 
     let power = null
     try {
-      const powerRes = await api.viriciti.specific(bus.vid).getPower()
+      const powerRes = await api.viriciti.specific(bus.vid, 1).getPower()
       if (!powerRes.error) {
         power = powerRes.data[0].value
       }
@@ -143,7 +143,7 @@ const NewFlyerBus = () => {
 
     let speed = null
     try {
-      const speedRes = await api.viriciti.specific(bus.vid).getSpeed()
+      const speedRes = await api.viriciti.specific(bus.vid, 1).getSpeed()
       if (!speedRes.error) {
         speed = speedRes.data[0].value
       }
@@ -153,7 +153,7 @@ const NewFlyerBus = () => {
 
     let voltage = null
     try {
-      const voltRes = await api.viriciti.specific(bus.vid).getVoltage()
+      const voltRes = await api.viriciti.specific(bus.vid, 1).getVoltage()
       if (!voltRes.error) {
         voltage = voltRes.data[0].value
       }
@@ -163,7 +163,7 @@ const NewFlyerBus = () => {
 
     let energyUsedPerDay = null
     try {
-      const energyPerDayRes = await api.viriciti.specific(bus.vid).getEnergyUsedPerDay()
+      const energyPerDayRes = await api.viriciti.specific(bus.vid, 1).getEnergyUsedPerDay()
       if (!energyPerDayRes.error) {
         energyUsedPerDay = energyPerDayRes.data[0].value
       }

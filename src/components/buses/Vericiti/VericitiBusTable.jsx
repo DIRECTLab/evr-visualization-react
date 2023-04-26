@@ -23,46 +23,6 @@ const VericitiBusTable = () => {
       cell: info => info.getValue(),
       header: () => <span>SOC</span>,
     },
-    // {
-    //   accessorKey: 'odo',
-    //   cell: info => info.getValue(),
-    //   header: () => <span>Odometer</span>,
-    // },
-    // {
-    //   accessorKey: 'latitude',
-    //   cell: info => info.getValue(),
-    //   header: () => <span>Latitude</span>,
-    // },
-    // {
-    //   accessorKey: 'longitude',
-    //   cell: info => info.getValue(),
-    //   header: () => <span>Longitude</span>,
-    // },
-    // {
-    //   accessorKey: 'speed',
-    //   cell: info => Math.round(info.getValue() * 100) / 100,
-    //   header: () => <span>Speed</span>,
-    // },
-    // {
-    //   accessorKey: 'current',
-    //   cell: info => Math.round(info.getValue()),
-    //   header: () => <span>Current (Amps)</span>,
-    // },
-    // {
-    //   accessorKey: 'energyUsedPerDay',
-    //   cell: info => Math.round(info.getValue()),
-    //   header: () => <span>Energy used per day</span>,
-    // },
-    // {
-    //   accessorKey: 'distanceDrivenPerDay',
-    //   cell: info => Math.round(info.getValue()),
-    //   header: () => <span>Distance driven per day</span>,
-    // },
-    // {
-    //   accessorKey: 'voltage',
-    //   cell: info => Math.round(info.getValue()),
-    //   header: () => <span>Voltage</span>,
-    // },
   ]
 
   const [buses, setBuses] = useState([])
@@ -80,7 +40,7 @@ const VericitiBusTable = () => {
     const output = await Promise.all(busesRes.data.map(async (bus) => {
       let soc = null
       try{
-        const socRes = await api.viriciti.specific(bus.vid).getSOC()
+        const socRes = await api.viriciti.specific(bus.vid, 1).getSOC()
         if (!socRes.error) {
           soc = socRes.data[0].value
         }
