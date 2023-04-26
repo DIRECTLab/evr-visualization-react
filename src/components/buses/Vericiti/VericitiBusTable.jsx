@@ -23,46 +23,6 @@ const VericitiBusTable = () => {
       cell: info => info.getValue(),
       header: () => <span>SOC</span>,
     },
-    {
-      accessorKey: 'odo',
-      cell: info => info.getValue(),
-      header: () => <span>Odometer</span>,
-    },
-    {
-      accessorKey: 'latitude',
-      cell: info => info.getValue(),
-      header: () => <span>Latitude</span>,
-    },
-    {
-      accessorKey: 'longitude',
-      cell: info => info.getValue(),
-      header: () => <span>Longitude</span>,
-    },
-    {
-      accessorKey: 'speed',
-      cell: info => Math.round(info.getValue() * 100) / 100,
-      header: () => <span>Speed</span>,
-    },
-    {
-      accessorKey: 'current',
-      cell: info => Math.round(info.getValue()),
-      header: () => <span>Current (Amps)</span>,
-    },
-    {
-      accessorKey: 'energyUsedPerDay',
-      cell: info => Math.round(info.getValue()),
-      header: () => <span>Energy used per day</span>,
-    },
-    {
-      accessorKey: 'distanceDrivenPerDay',
-      cell: info => Math.round(info.getValue()),
-      header: () => <span>Distance driven per day</span>,
-    },
-    {
-      accessorKey: 'voltage',
-      cell: info => Math.round(info.getValue()),
-      header: () => <span>Voltage</span>,
-    },
   ]
 
   const [buses, setBuses] = useState([])
@@ -78,100 +38,14 @@ const VericitiBusTable = () => {
     }
 
     const output = await Promise.all(busesRes.data.map(async (bus) => {
-      // Get current
-      let current = null
-      try {
-        const currentRes = await api.viriciti.specific(bus.vid).getCurrent()
-        if (!currentRes.error) {
-          current = currentRes.data[0].value
-        }
-      }
-      catch{}
-      bus.current = current
-      // 
-
-      // get gps data
-      let gps = {
-        lat: null,
-        long: null
-      }
-      try {
-        const gpsRes = await api.viriciti.specific(bus.vid).getGPS()
-        if (!gpsRes.error) {
-          gps.lat = gpsRes.data[0].lat
-          gps.long = gpsRes.data[0].long
-        }
-      } catch{}
-      bus.latitude = gps.lat
-      bus.longitude = gps.long
-      
-      let odo = null
-      try {
-        const odoRes = await api.viriciti.specific(bus.vid).getOdo()
-        if (!odoRes.error) {
-          odo = odoRes.data[0].value
-        }
-      } catch{}
-      bus.odo = odo
-
-
-      let power = null
-      try {
-        const powerRes = await api.viriciti.specific(bus.vid).getPower()
-        if (!powerRes.error) {
-          power = powerRes.data[0].value
-        }
-      } catch{}
-      bus.power = power
-
-
       let soc = null
       try{
-        const socRes = await api.viriciti.specific(bus.vid).getSOC()
+        const socRes = await api.viriciti.specific(bus.vid, 1).getSOC()
         if (!socRes.error) {
           soc = socRes.data[0].value
         }
       } catch{}
       bus.soc = soc
-
-      let speed = null
-      try {
-        const speedRes = await api.viriciti.specific(bus.vid).getSpeed()
-        if (!speedRes.error) {
-          speed = speedRes.data[0].value
-        }
-      } catch{}
-      bus.speed = speed
-
-
-      let voltage = null
-      try {
-        const voltRes = await api.viriciti.specific(bus.vid).getVoltage()
-        if (!voltRes.error) {
-          voltage = voltRes.data[0].value
-        }
-      } catch{}
-      bus.voltage = voltage
-
-
-      let energyUsedPerDay = null
-      try {
-        const energyPerDayRes = await api.viriciti.specific(bus.vid).getEnergyUsedPerDay()
-        if (!energyPerDayRes.error) {
-          energyUsedPerDay = energyPerDayRes.data[0].value
-        }
-      } catch{}
-      bus.energyUsedPerDay = energyUsedPerDay
-      
-      let distanceDrivenPerDay = null
-      try{
-        const distancePerDayRes = await api.viriciti.specific(bus.vid).getDistanceDrivenPerDay()
-        if (!distancePerDayRes.error) {
-          distanceDrivenPerDay = distancePerDayRes.data[0].value
-        }
-      } catch{}
-      bus.distanceDrivenPerDay = distanceDrivenPerDay
-
       return bus
     }))
     
@@ -248,7 +122,7 @@ const VericitiBusTable = () => {
               {table.getRowModel().rows.map((row, rowIndex) => (
                 <tr
                   className="hover cursor-pointer select-none"
-                  // onClick={() => routeChange(`/buses/newflyer/${row.original.BusId}`)}
+                  onClick={() => routeChange(`/buses/viricity/${row.original.vid}`)}
                   key={rowIndex}
                 >
                   {row.getVisibleCells().map((cell, colIndex) => (

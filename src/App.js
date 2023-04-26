@@ -17,21 +17,7 @@ const Fronius = lazy(() => import('./pages/EMS/Fronius'))
 const SpecificFroniusModel = lazy(() => import('./pages/EMS/SpecificFroniusModel'))
 const Sma50 = lazy(() => import('./pages/EMS/Sma50'))
 const Sma7 = lazy(() => import('./pages/EMS/Sma7'))
-
-
-// import Buses from './pages/buses/Buses';
-// import EMS from './pages/EMS'
-// import Map from './pages/Map';
-// import Charger from './pages/Charger';
-// import GustavKlein from './pages/EMS/GustavKlein';
-// import Yaskawa from './pages/EMS/Yaskawa';
-// import NewFlyerBus from './pages/buses/NewFlyerBus';
-// import Fronius from './pages/EMS/Fronius';
-// import SpecificFroniusModel from './pages/EMS/SpecificFroniusModel';
-// import Sma50 from './pages/EMS/Sma50';
-// import Sma7 from './pages/EMS/Sma7';
-
-
+const ViricityBus = lazy(() => import('./pages/buses/ViricityBus'))
 
 
 function App() {
@@ -46,6 +32,7 @@ function App() {
           <Route path="/chargers/charger/:id" element={<Charger />} />
           <Route path="/buses" element={<Buses />} />
           <Route path="/buses/newflyer/:id" element={<NewFlyerBus />} />
+          <Route path="/buses/viricity/:id" element={<ViricityBus />} />
           <Route path="/map" element={<Map />} />
           <Route path="/ems" element={<EMS />} />
           <Route path="/ems/gustav-klein" element={<GustavKlein />} />

@@ -106,17 +106,17 @@ const api = {
   }),
   viriciti: ({
     getAll: r('get', 'viriciti/bus/all'),
-    specific: (busId) => ({
+    specific: (busId, limit=1250) => ({
       getBus: r('get', `viriciti/bus/${busId}`),
-      getCurrent: r('get', `viriciti/current/${busId}`),
-      getGPS: r('get', `viriciti/gps/${busId}`),
-      getOdo: r('get', `viriciti/odo/${busId}`),
-      getPower: r('get', `viriciti/power/${busId}`),
-      getSOC: r('get', `viriciti/soc/${busId}`),
-      getSpeed: r('get', `viriciti/speed/${busId}`),
-      getVoltage: r('get', `viriciti/voltage/${busId}`),
-      getEnergyUsedPerDay: r('get', `viriciti/energy_used_per_day/${busId}`),
-      getDistanceDrivenPerDay: r('get', `viriciti/distance_driven_per_day/${busId}`)
+      getCurrent: r('get', `viriciti/current/${busId}?limit=${limit}`),
+      getGPS: r('get', `viriciti/gps/${busId}?limit=${limit}`),
+      getOdo: r('get', `viriciti/odo/${busId}?limit=${limit}`),
+      getPower: r('get', `viriciti/power/${busId}?limit=${limit}`),
+      getSOC: r('get', `viriciti/soc/${busId}?limit=${limit}`),
+      getSpeed: r('get', `viriciti/speed/${busId}?limit=${limit}`),
+      getVoltage: r('get', `viriciti/voltage/${busId}?limit=${limit}`),
+      getEnergyUsedPerDay: r('get', `viriciti/energy_used_per_day/${busId}?limit=${limit}`),
+      getDistanceDrivenPerDay: r('get', `viriciti/distance_driven_per_day/${busId}?limit=${limit}`)
 
     })
   })
