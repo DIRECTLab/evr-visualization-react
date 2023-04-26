@@ -1,5 +1,4 @@
 import { useParams } from "react-router-dom"
-import SpecificBus from "../../components/buses/Vericiti/SpecificBus"
 import { useEffect, useState } from "react"
 import api from "../../api"
 import Loading from "../../components/Loading"
