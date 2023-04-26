@@ -61,7 +61,7 @@ const Map = () => {
       let lat = null
       let long = null
       try {
-        const gpsRes = await api.viriciti.specific(bus.vid).getGPS()
+        const gpsRes = await api.viriciti.specific(bus.vid, 1).getGPS()
         if (!gpsRes.error) {
           lat = gpsRes.data[0].lat
           long = gpsRes.data[0].long
@@ -70,7 +70,7 @@ const Map = () => {
 
       let soc = null
       try {
-        const socRes = await api.viriciti.specific(bus.vid).getSOC()
+        const socRes = await api.viriciti.specific(bus.vid, 1).getSOC()
         if (!socRes.error) {
           soc = socRes.data[0].value
         }
@@ -158,9 +158,6 @@ const Map = () => {
           )
         )}
         { chargerInformation.map((charger, idx) => (
-          // <>
-          // {console.log(charger)}
-          // </>
           <Marker position={[charger.latitude, charger.longitude]} icon={chargerIcon} key={idx}>
             <Popup>
               Charger id: {charger.id}<br />
