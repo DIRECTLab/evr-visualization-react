@@ -11,7 +11,7 @@ import Loading from '../../Loading'
 import { useNavigate } from 'react-router-dom'
 
 
-const VericitiBusTable = () => {
+const SpecificBus = ({id}) => {
   const columns = [
     {
       accessorKey: 'vid',
@@ -23,46 +23,41 @@ const VericitiBusTable = () => {
       cell: info => info.getValue(),
       header: () => <span>SOC</span>,
     },
-    // {
-    //   accessorKey: 'odo',
-    //   cell: info => info.getValue(),
-    //   header: () => <span>Odometer</span>,
-    // },
-    // {
-    //   accessorKey: 'latitude',
-    //   cell: info => info.getValue(),
-    //   header: () => <span>Latitude</span>,
-    // },
-    // {
-    //   accessorKey: 'longitude',
-    //   cell: info => info.getValue(),
-    //   header: () => <span>Longitude</span>,
-    // },
-    // {
-    //   accessorKey: 'speed',
-    //   cell: info => Math.round(info.getValue() * 100) / 100,
-    //   header: () => <span>Speed</span>,
-    // },
-    // {
-    //   accessorKey: 'current',
-    //   cell: info => Math.round(info.getValue()),
-    //   header: () => <span>Current (Amps)</span>,
-    // },
-    // {
-    //   accessorKey: 'energyUsedPerDay',
-    //   cell: info => Math.round(info.getValue()),
-    //   header: () => <span>Energy used per day</span>,
-    // },
-    // {
-    //   accessorKey: 'distanceDrivenPerDay',
-    //   cell: info => Math.round(info.getValue()),
-    //   header: () => <span>Distance driven per day</span>,
-    // },
-    // {
-    //   accessorKey: 'voltage',
-    //   cell: info => Math.round(info.getValue()),
-    //   header: () => <span>Voltage</span>,
-    // },
+    {
+      accessorKey: 'odo',
+      cell: info => info.getValue(),
+      header: () => <span>Odometer</span>,
+    },
+    {
+      accessorKey: 'latitude',
+      cell: info => info.getValue(),
+      header: () => <span>Latitude</span>,
+    },
+    {
+      accessorKey: 'longitude',
+      cell: info => info.getValue(),
+      header: () => <span>Longitude</span>,
+    },
+    {
+      accessorKey: 'speed',
+      cell: info => Math.round(info.getValue() * 100) / 100,
+      header: () => <span>Speed</span>,
+    },
+    {
+      accessorKey: 'current',
+      cell: info => Math.round(info.getValue()),
+      header: () => <span>Current (Amps)</span>,
+    },
+    {
+      accessorKey: 'energyUsedPerDay',
+      cell: info => Math.round(info.getValue()),
+      header: () => <span>Energy used per day</span>,
+    },
+    {
+      accessorKey: 'voltage',
+      cell: info => Math.round(info.getValue()),
+      header: () => <span>Voltage</span>,
+    },
   ]
 
   const [buses, setBuses] = useState([])
@@ -71,26 +66,99 @@ const VericitiBusTable = () => {
   const [loading, setLoading] = useState(true)
   
   const loadData = async () => {
-    const busesRes = await api.viriciti.getAll();
+    const busesRes = await api.viriciti.specific(id).getBus();
     if (busesRes.error){
       setLoading(false)
       return alert(busesRes.error)
     }
+    let bus = {}
+    if (busesRes.data)
+      bus = busesRes.data
+    let current = null
+    try {
+      const currentRes = await api.viriciti.specific(bus.vid).getCurrent()
+      if (!currentRes.error) {
+        current = currentRes.data[0].value
+      }
+    }
+    catch{}
+    bus.current = current
+ 
 
-    const output = await Promise.all(busesRes.data.map(async (bus) => {
-      let soc = null
-      try{
-        const socRes = await api.viriciti.specific(bus.vid).getSOC()
-        if (!socRes.error) {
-          soc = socRes.data[0].value
-        }
-      } catch{}
-      bus.soc = soc
-      return bus
-    }))
+    // get gps data
+    let gps = {
+      lat: null,
+      long: null
+    }
+    try {
+      const gpsRes = await api.viriciti.specific(bus.vid).getGPS()
+      if (!gpsRes.error) {
+        gps.lat = gpsRes.data[0].lat
+        gps.long = gpsRes.data[0].long
+      }
+    } catch{}
+    bus.latitude = gps.lat
+    bus.longitude = gps.long
     
-    setAllBuses(output)
-    setBuses(output)
+    let odo = null
+    try {
+      const odoRes = await api.viriciti.specific(bus.vid).getOdo()
+      if (!odoRes.error) {
+        odo = odoRes.data[0].value
+      }
+    } catch{}
+    bus.odo = odo
+
+
+    let power = null
+    try {
+      const powerRes = await api.viriciti.specific(bus.vid).getPower()
+      if (!powerRes.error) {
+        power = powerRes.data[0].value
+      }
+    } catch{}
+    bus.power = power
+
+
+    let soc = null
+    try{
+      const socRes = await api.viriciti.specific(bus.vid).getSOC()
+      if (!socRes.error) {
+        soc = socRes.data[0].value
+      }
+    } catch{}
+    bus.soc = soc
+
+    let speed = null
+    try {
+      const speedRes = await api.viriciti.specific(bus.vid).getSpeed()
+      if (!speedRes.error) {
+        speed = speedRes.data[0].value
+      }
+    } catch{}
+    bus.speed = speed
+
+
+    let voltage = null
+    try {
+      const voltRes = await api.viriciti.specific(bus.vid).getVoltage()
+      if (!voltRes.error) {
+        voltage = voltRes.data[0].value
+      }
+    } catch{}
+    bus.voltage = voltage
+
+
+    let energyUsedPerDay = null
+    try {
+      const energyPerDayRes = await api.viriciti.specific(bus.vid).getEnergyUsedPerDay()
+      if (!energyPerDayRes.error) {
+        energyUsedPerDay = energyPerDayRes.data[0].value
+      }
+    } catch{}
+    bus.energyUsedPerDay = energyUsedPerDay
+    setAllBuses(bus)
+    setBuses(bus)
     setLoading(false);
   }
 
@@ -118,7 +186,7 @@ const VericitiBusTable = () => {
   }
 
   const table = useReactTable({
-    data: buses,
+    data: [buses],
     columns,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -162,7 +230,6 @@ const VericitiBusTable = () => {
               {table.getRowModel().rows.map((row, rowIndex) => (
                 <tr
                   className="hover cursor-pointer select-none"
-                  onClick={() => routeChange(`/buses/viricity/${row.original.vid}`)}
                   key={rowIndex}
                 >
                   {row.getVisibleCells().map((cell, colIndex) => (
@@ -180,4 +247,4 @@ const VericitiBusTable = () => {
   }
 }
 
-export default VericitiBusTable
+export default SpecificBus
