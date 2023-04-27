@@ -1,5 +1,4 @@
 import Loading from "../Loading";
-// import { onMount, createSignal, onCleanup } from "solid-js";
 
 import api from "../../api";
 import { useEffect, useState } from "react";

@@ -1,9 +1,5 @@
 import React, { Suspense } from "react"
 import Loading from "../components/Loading"
-// import CurrentUtilization from "../components/home/CurrentUtilization";
-// import GraphCarousel from "../components/home/GraphCarousel";
-// import MonitorChart from "../components/home/MonitorChart";
-// import UsuChargers from "../components/home/UsuChargers";
 
 const CurrentUtilization = React.lazy(() => import("../components/home/CurrentUtilization"))
 const GraphCarousel = React.lazy(() => import("../components/home/GraphCarousel"))

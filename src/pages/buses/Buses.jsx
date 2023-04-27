@@ -1,8 +1,4 @@
 import React from "react";
-// import BusMap from "../../components/buses/BusMap";
-// import NewFlyerBusTable from "../../components/buses/NewFlyer/NewFlyerBusTable";
-// import VericitiBusTable from "../../components/buses/Vericiti/VericitiBusTable";
-
 const BusMap = React.lazy(() => import("../../components/buses/BusMap"));
 const NewFlyerBusTable = React.lazy(() => import("../../components/buses/NewFlyer/NewFlyerBusTable"))
 const VericitiBusTable = React.lazy(() => import("../../components/buses/Vericiti/VericitiBusTable"))
