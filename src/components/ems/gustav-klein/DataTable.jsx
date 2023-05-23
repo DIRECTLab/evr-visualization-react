@@ -65,7 +65,7 @@ const DataTable = () => {
 
 
   const loadData = async () => {
-    const res = await api.ems.gustav_klein.getAll();
+    const res = await api.ems.gustav.get({params: {limit: 100}});
     if (res.error) {
       return alert(res.error)
     }    

@@ -153,7 +153,7 @@ const DataTable = ({id}) => {
 
 
   const loadData = async () => {
-    const res = await api.ems.fronius.specific(id).getModelData();
+    const res = await api.ems.fronius.get({params: {model: id, limit: 100}});
     if (res.error) {
       setLoading(false)
       return alert(res.error)

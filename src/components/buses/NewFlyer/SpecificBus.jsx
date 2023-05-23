@@ -55,19 +55,19 @@ const SpecificBus = ({id}) => {
   const [buses, setBuses] = useState([])
   const [allBuses, setAllBuses] = useState([])
   const [searchFilter, setSearchFilter] = useState('')
-  const [daysToSearch, setDaysToSearch] = useState(20)
+  const [daysToSearch, setDaysToSearch] = useState(1)
 
 
   // CHART SETUP and DATA
   const loadData = async () => {
-    const busesRes = await api.newflyer.specific(id).getAllRoutes(daysToSearch);
+    const busesRes = await api.bus.newFlyer.routes({params: {id: id, limit: 500, days: daysToSearch}});
+
     if (busesRes.error){
       setLoading(false)
       return alert(busesRes.error)
     }
     setBuses(busesRes.data)
     setAllBuses(busesRes.data)
-    console.log(busesRes.data)
 
     const socData = busesRes.data.reduce((prev, curr) => {
       if (prev.usedTimes.has(curr.gpsFixTime)){
@@ -76,11 +76,10 @@ const SpecificBus = ({id}) => {
       else{
         prev.socDataUnique.push(curr.soc);
         prev.usedTimes.add(curr.gpsFixTime);
-        prev.timeData.push(moment(curr.gpsFixTime).format('M/D/YYYY h:mm::ss a'))
+        prev.timeData.push(moment(curr.gpsFixTime).format('M/D/YYYY h:mm:ss a'))
         return prev
       }
     }, {socDataUnique: [], timeData: [], usedTimes: new Set()});
-    console.log(socData)
 
     const data = socData.socDataUnique.reverse()
     const labels = socData.timeData.reverse()

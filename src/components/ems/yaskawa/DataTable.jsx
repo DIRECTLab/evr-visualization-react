@@ -135,7 +135,7 @@ const DataTable = () => {
 
 
   const loadData = async () => {
-    const res = await api.ems.yaskawa.getAll();
+    const res = await api.ems.yaskawa.get({params: {limit: 100}});
     if (res.error) {
       return alert(res.error)
     }

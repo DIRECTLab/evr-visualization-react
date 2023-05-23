@@ -150,7 +150,7 @@ const DataTable = () => {
 
 
   const loadData = async () => {
-    const res = await api.ems.sma50.getAll();
+    const res = await api.ems.sma50.get({params: {limit: 100}});
     if (res.error) {
       return alert(res.error)
     }

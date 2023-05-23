@@ -31,7 +31,7 @@ const VericitiBusTable = () => {
   const [loading, setLoading] = useState(true)
   
   const loadData = async () => {
-    const busesRes = await api.viriciti.getAll();
+    const busesRes = await api.bus.viriciti.get();
     if (busesRes.error){
       setLoading(false)
       return alert(busesRes.error)
@@ -40,7 +40,8 @@ const VericitiBusTable = () => {
     const output = await Promise.all(busesRes.data.map(async (bus) => {
       let soc = null
       try{
-        const socRes = await api.viriciti.specific(bus.vid, 1).getSOC()
+        const socRes = await api.bus.viriciti.soc({params: {vid: bus.vid, limit: 1}});
+
         if (!socRes.error) {
           soc = socRes.data[0].value
         }

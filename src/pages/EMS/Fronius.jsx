@@ -8,7 +8,7 @@ const Fronius = () => {
   const [models, setModels] = useState([])
   const [loading, setLoading] = useState(true)
   const loadData = async() => {
-    const modelsRes = await api.ems.fronius.getModelNames()
+    const modelsRes = await api.ems.fronius.get()
     if (!modelsRes.error) {
       setModels(modelsRes.data)
     }
