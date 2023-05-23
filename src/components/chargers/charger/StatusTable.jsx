@@ -57,7 +57,7 @@ const StatusTable = ({id}) => {
 
 
   const loadData = async () => {
-    const chargerStatus = await api.charger(id).getAllStatus();
+    const chargerStatus = await api.charger.status({params: {id: id, limit: 20}});
 
     if (chargerStatus.error){
       return alert(chargerStatus.error)

@@ -85,7 +85,8 @@ const ChargeProfileTable = ({id}) => {
 
 
   const loadData = async () => {
-    const chargerProfileRes = await api.charger(id).getAllProfiles();
+    const chargerProfileRes = await api.charger.profile({params: {id: id, limit: 20}}); // TODO Pagination
+
 
     if (chargerProfileRes.error){
       return alert(chargerProfileRes.error);

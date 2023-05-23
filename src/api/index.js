@@ -3,20 +3,12 @@ import moment from 'moment';
 
 const methods = {
   get: 'get',
-  post: 'post',
-  patch: 'patch',
-  delete: 'delete',
 };
 
 const requestGenerator = (getBase) => (method, uri) => (data = {}) => {
   let requestPromise;
   switch (method) {
     case methods.get:
-    case methods.delete:
-      requestPromise = axios[method](`${getBase()}/${uri}`, {
-        params: data,
-      });
-      break;
     default:
       requestPromise = axios[method](`${getBase()}/${uri}`, data);
       break;
@@ -31,7 +23,7 @@ const getApiBase = () => 'http://localhost:11236'
 const r = requestGenerator(getApiBase);
 
 const api = {
-  getChargers: r('get', 'charger'),
+  // getChargers: r('get', 'charger'),
   getLeviton: async () => {
     const res = await r('get', 'evr/leviton/evr?limit=1250')();
     return {data: res.data.map(d => ({ ...d, time: moment(d.timestamp).format('MMM DD h:mma') })).reverse()};
@@ -44,18 +36,23 @@ const api = {
     const res = await r('get', 'evr/leviton/evr?limit=1')();
     return {data: res.data.map(d => ({ ...d, time: moment(d.timestamp).format('MMM DD h:mma') })).reverse()};
   },
-  charger: (chargerId) => ({
-    get: r('get', `charger/${chargerId}`),
-    getStatus: r('get', `charger/${chargerId}/status?recent=true`),
-    getAllStatus: r('get', `charger/${chargerId}/status?limit=25`),
-    getChargeProfile: r('get', `charger/${chargerId}/profile/current`),
-    getAllProfiles: r('get', `charger/${chargerId}/profile?limit=25`),
-    getTransactions: r('get', `charger/${chargerId}/transaction?limit=25`),
-    getCurrentTransaction: r('get', `charger/${chargerId}/transaction/current`),
-    meterValues: (transactionId) => ({
-      getMeterValues: r('get', `charger/${chargerId}/meterValues?transactionId=${transactionId}`),
-    }),
-  }),
+  charger: {
+    get: r('get', 'charger'),
+    status: r('get', 'status'),
+    profile: r('get', 'profile'),
+    transaction: r('get', 'transaction'),
+    location: r('get', 'location'),
+  },
+  // charger: (chargerId) => ({
+  //   get: r('get', `charger/${chargerId}`),
+  //   getChargeProfile: r('get', `charger/${chargerId}/profile/current`),
+  //   getAllProfiles: r('get', `charger/${chargerId}/profile?limit=25`),
+  //   getTransactions: r('get', `charger/${chargerId}/transaction?limit=25`),
+  //   getCurrentTransaction: r('get', `charger/${chargerId}/transaction/current`),
+  //   meterValues: (transactionId) => ({
+  //     getMeterValues: r('get', `charger/${chargerId}/meterValues?transactionId=${transactionId}`),
+  //   }),
+  // }),
   transactions: ({
     getTransactions: r('get', 'charger/transaction'),
   }),

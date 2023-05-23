@@ -78,7 +78,9 @@ const TransactionTable = ({id}) => {
 
 
   const loadData = async () => {
-    const chargerTransactionsRes = await api.charger(id).getTransactions();
+//    const chargerTransactionsRes = await api.charger(id).getTransactions();
+    const chargerTransactionsRes = await api.charger.transaction({params: {id: id, limit: 20}});
+
 
     if (chargerTransactionsRes.error){
       return alert(chargerTransactionsRes.error)
