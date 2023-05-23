@@ -71,15 +71,15 @@ const api = {
   }),
   ems: ({
     yaskawa: ({
-      getAll: r('get', 'evr/yaskawa?limit=250'),
+      getAll: r('get', 'evr/yaskawa?limit=1250'),
       get100: r('get', 'evr/yaskawa?limit=100'),
-      getStatus: r('get', 'alive/yaskawa'),
+      getStatus: r('get', 'yaskawa?alive=true'),
       current: r('get', 'evr/yaskawa?limit=1')
     }),
     gustav_klein: ({
-      getAll: r('get', 'evr/gustav?limit=250'),
+      getAll: r('get', 'evr/gustav?limit=1250'), // TODO change this
       get100: r('get', 'evr/gustav?limit=100'),
-      getStatus: r('get', 'alive/gustav'),
+      getStatus: r('get', 'gustav?alive=true'),
       current: r('get', 'evr/gustav?limit=1')
     }),
     fronius: ({
@@ -87,21 +87,21 @@ const api = {
       specific: (model) => ({
         getModelData: r('get', `evr/fronius/${model}`),
         get100: r('get', `evr/fronius/${model}?limit=100`),
-        getStatus: r('get', `alive/fronius/${model}`),
+        getStatus: r('get', `fronius?model=${model}&alive=true`),
         current: r('get', `evr/fronius/${model}?limit=1`)
       })
     }),
     sma50: ({
-      getAll: r('get', 'evr/sma50?limit=250'),
+      getAll: r('get', 'evr/sma50?limit=1250'),
       get100: r('get', 'evr/sma50?limit=100'),
-      getStatus: r('get', 'alive/sma50'),
+      getStatus: r('get', 'sma50?alive=true'),
       current: r('get', 'evr/sma50?limit=1'),
     }),
     sma7: ({
-      getAll: r('get', 'evr/sma7?limit=250'),
+      getAll: r('get', 'evr/sma7?limit=1250'),
       get100: r('get', 'evr/sma7?limit=100'),
       current: r('get', 'evr/sma7?limit=1'),
-      getStatus: r('get', 'alive/sma7')
+      getStatus: r('get', 'sma7?alive=true')
     })
   }),
   viriciti: ({
