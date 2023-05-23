@@ -4,10 +4,10 @@ const GustavKlein = () => {
 
 
   return (
-    <div class="prose md:container md:mx-auto mx-auto w-full">
-      <h1 class="mb-16 text-4xl font-bold">Gustav-Klein</h1>
+    <div className="prose md:container md:mx-auto mx-auto w-full">
+      <h1 className="mb-16 text-4xl font-bold">Gustav-Klein</h1>
       <DataTable />
-      <div class="my-8"/>
+      <div className="my-8"/>
     </div>    
   )
 }

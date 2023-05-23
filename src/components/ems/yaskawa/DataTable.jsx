@@ -28,7 +28,7 @@ const DataTable = () => {
     },
     {
       accessorKey: 'status',
-      cell: info => info.getValue() === 'Running' ? <i class="fa-solid fa-circle-check text-success"></i> : <i class="fa-solid fa-circle-xmark text-error"></i>,
+      cell: info => info.getValue() === 'Running' ? <i className="fa-solid fa-circle-check text-success"></i> : <i className="fa-solid fa-circle-xmark text-error"></i>,
       header: () => <span>Running</span>,
     },
     {

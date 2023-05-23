@@ -26,8 +26,8 @@ const requestGenerator = (getBase) => (method, uri) => (data = {}) => {
     .catch(e => e.response.data);
 };
 
-const getApiBase = () => 'http://144.39.204.242:11236';
-// const getApiBase = () => 'http://localhost:3030'
+// const getApiBase = () => 'http://144.39.204.242:11236';
+const getApiBase = () => 'http://localhost:11236'
 const r = requestGenerator(getApiBase);
 
 const api = {
@@ -47,10 +47,10 @@ const api = {
   charger: (chargerId) => ({
     get: r('get', `charger/${chargerId}`),
     getStatus: r('get', `charger/${chargerId}/status?recent=true`),
-    getAllStatus: r('get', `charger/${chargerId}/status`),
+    getAllStatus: r('get', `charger/${chargerId}/status?limit=25`),
     getChargeProfile: r('get', `charger/${chargerId}/profile/current`),
-    getAllProfiles: r('get', `charger/${chargerId}/profile`),
-    getTransactions: r('get', `charger/${chargerId}/transaction`),
+    getAllProfiles: r('get', `charger/${chargerId}/profile?limit=25`),
+    getTransactions: r('get', `charger/${chargerId}/transaction?limit=25`),
     getCurrentTransaction: r('get', `charger/${chargerId}/transaction/current`),
     meterValues: (transactionId) => ({
       getMeterValues: r('get', `charger/${chargerId}/meterValues?transactionId=${transactionId}`),
@@ -63,7 +63,7 @@ const api = {
     getAll: r('get', 'bus'),
     specific: (busId) => ({
       getRoute: r('get', `bus/${busId}`),
-      getAllRoutes: (numOfDays) => r('get', `bus/${busId}/route/useful?days=${numOfDays}`)(),
+      getAllRoutes: (numOfDays) => r('get', `bus/${busId}/route/useful?days=${numOfDays}&limit=750`)(),
     }),
   }),
   tpss: ({
@@ -71,13 +71,13 @@ const api = {
   }),
   ems: ({
     yaskawa: ({
-      getAll: r('get', 'evr/yaskawa'),
+      getAll: r('get', 'evr/yaskawa?limit=250'),
       get100: r('get', 'evr/yaskawa?limit=100'),
       getStatus: r('get', 'alive/yaskawa'),
       current: r('get', 'evr/yaskawa?limit=1')
     }),
     gustav_klein: ({
-      getAll: r('get', 'evr/gustav'),
+      getAll: r('get', 'evr/gustav?limit=250'),
       get100: r('get', 'evr/gustav?limit=100'),
       getStatus: r('get', 'alive/gustav'),
       current: r('get', 'evr/gustav?limit=1')
@@ -92,13 +92,13 @@ const api = {
       })
     }),
     sma50: ({
-      getAll: r('get', 'evr/sma50'),
+      getAll: r('get', 'evr/sma50?limit=250'),
       get100: r('get', 'evr/sma50?limit=100'),
       getStatus: r('get', 'alive/sma50'),
       current: r('get', 'evr/sma50?limit=1'),
     }),
     sma7: ({
-      getAll: r('get', 'evr/sma7'),
+      getAll: r('get', 'evr/sma7?limit=250'),
       get100: r('get', 'evr/sma7?limit=100'),
       current: r('get', 'evr/sma7?limit=1'),
       getStatus: r('get', 'alive/sma7')
@@ -106,13 +106,13 @@ const api = {
   }),
   viriciti: ({
     getAll: r('get', 'viriciti/bus/all'),
-    specific: (busId, limit=1250) => ({
+    specific: (busId, limit=1) => ({
       getBus: r('get', `viriciti/bus/${busId}`),
       getCurrent: r('get', `viriciti/current/${busId}?limit=${limit}`),
       getGPS: r('get', `viriciti/gps/${busId}?limit=${limit}`),
       getOdo: r('get', `viriciti/odo/${busId}?limit=${limit}`),
       getPower: r('get', `viriciti/power/${busId}?limit=${limit}`),
-      getSOC: r('get', `viriciti/soc/${busId}?limit=${limit}`),
+      getSOC: r('get', `viriciti/soc/${busId}?limit=750`),
       getSpeed: r('get', `viriciti/speed/${busId}?limit=${limit}`),
       getVoltage: r('get', `viriciti/voltage/${busId}?limit=${limit}`),
       getEnergyUsedPerDay: r('get', `viriciti/energy_used_per_day/${busId}?limit=${limit}`),

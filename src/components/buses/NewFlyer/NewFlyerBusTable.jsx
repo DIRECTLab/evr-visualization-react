@@ -90,7 +90,7 @@ const NewFlyerBusTable = () => {
       if (routes.error){
         console.log(routes.error)
       }
-      return { ...routes.data.lastRoute, ...bus };
+      return { ...routes.data[0], ...bus };
     }));
 
 

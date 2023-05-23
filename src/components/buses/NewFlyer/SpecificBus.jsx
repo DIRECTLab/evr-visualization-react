@@ -55,7 +55,7 @@ const SpecificBus = ({id}) => {
   const [buses, setBuses] = useState([])
   const [allBuses, setAllBuses] = useState([])
   const [searchFilter, setSearchFilter] = useState('')
-  const [daysToSearch, setDaysToSearch] = useState(1)
+  const [daysToSearch, setDaysToSearch] = useState(20)
 
 
   // CHART SETUP and DATA
@@ -67,6 +67,7 @@ const SpecificBus = ({id}) => {
     }
     setBuses(busesRes.data)
     setAllBuses(busesRes.data)
+    console.log(busesRes.data)
 
     const socData = busesRes.data.reduce((prev, curr) => {
       if (prev.usedTimes.has(curr.gpsFixTime)){
@@ -79,6 +80,7 @@ const SpecificBus = ({id}) => {
         return prev
       }
     }, {socDataUnique: [], timeData: [], usedTimes: new Set()});
+    console.log(socData)
 
     const data = socData.socDataUnique.reverse()
     const labels = socData.timeData.reverse()
@@ -184,13 +186,13 @@ const SpecificBus = ({id}) => {
     setLoading(true)
     loadData()
     
-    const intervalId = setInterval(() => {
-      loadData()
-    }, 7000)
+    // const intervalId = setInterval(() => {
+    //   loadData()
+    // }, 7000)
 
-    return () => {
-      clearInterval(intervalId); 
-    }
+    // return () => {
+    //   clearInterval(intervalId); 
+    // }
   }, [])
   // 
 
