@@ -85,7 +85,7 @@ const api = {
     fronius: ({
       getModelNames: r('get', 'evr/fronius'),
       specific: (model) => ({
-        getModelData: r('get', `evr/fronius/${model}`),
+        getModelData: r('get', `evr/fronius/${model}?limit=1250`),
         get100: r('get', `evr/fronius/${model}?limit=100`),
         getStatus: r('get', `fronius?model=${model}&alive=true`),
         current: r('get', `evr/fronius/${model}?limit=1`)
