@@ -25,38 +25,38 @@ const GraphCarousel = () => {
   const [loading, setLoading] = useState(true)
 
   const checkStatus = async () => {
-    const yaskawaRes = await api.ems.yaskawa.getStatus()
+    const yaskawaRes = await api.ems.yaskawa.get({params: {alive: true}});
     if (yaskawaRes.error) {
       return alert(yaskawaRes.error)
     }
     setYaskawaStatus(yaskawaRes.data.active)
     
-    const sma50Res = await api.ems.sma50.getStatus()
+    const sma50Res = await api.ems.sma50.get({params: {alive: true}});
     if (sma50Res.error) {
       return alert(sma50Res.error)
     }
     setSma50Status(sma50Res.data.active)
 
-    const sma7Res = await api.ems.sma7.getStatus()
+    const sma7Res = await api.ems.sma7.get({params: {alive: true}});
     if (sma7Res.error){
       return alert(sma7Res.error)
     }
     setSma7Status(sma7Res.data.active)
 
-    const symoStatus = await api.ems.fronius.specific('symo').getStatus()
+    const symoStatus = await api.ems.fronius.get({params: {model: 'symo', alive: true}});
     if (symoStatus.error) {
       return alert(symoStatus.error)
     }
     setSymoStatus(symoStatus.data.active)
 
-    const primoStatus = await api.ems.fronius.specific('primo').getStatus()
+    const primoStatus = await api.ems.fronius.get({params: {model: 'primo', alive: true}});
     if (primoStatus.error) {
       return alert(primoStatus.error)
     }
     setPrimoStatus(primoStatus.data.active)
 
     
-    const gustavStatus = await api.ems.gustav_klein.getStatus()
+    const gustavStatus = await api.ems.gustav.get({params: {alive: true}});
     if (gustavStatus.error) {
       return alert(gustavStatus.error)
     }

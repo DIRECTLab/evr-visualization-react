@@ -54,7 +54,7 @@ const YaskawaPowerChart = () => {
 
   
   const loadData = async () => {
-    const res = await api.ems.yaskawa.get100()
+    const res = await api.ems.yaskawa.get({params: {limit: 100}})
     if (res.error){
       setLoading(false)
     }

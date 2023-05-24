@@ -55,7 +55,7 @@ const SymoPowerChart = () => {
 
   
   const loadData = async () => {
-    const res = await api.ems.fronius.specific('symo').get100()
+    const res = await api.ems.fronius.get({params: {model: 'symo', limit: 100}})
     if (res.error){
       setLoading(false)
     }

@@ -55,7 +55,7 @@ const GustavVoltageChart = () => {
 
   
   const loadData = async () => {
-    const res = await api.ems.gustav_klein.get100()
+    const res = await api.ems.gustav.get({params: {limit: 100}});
     if (res.error){
       setLoading(false)
     }

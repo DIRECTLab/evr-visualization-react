@@ -10,21 +10,21 @@ const CurrentUtilization = () => {
   const [facilityPower, setFacilityPower] = useState(null)
 
   const loadData = async () => {
-    const levitonRes = await api.getCurrentLeviton();
+    const levitonRes = await api.ems.leviton.get({params: {current: true}});
     if (levitonRes.error){
       setLoading(false)
       return alert(levitonRes.error)
     }
-    let vltgOutput = parseFloat(levitonRes.data[0].power)?.toFixed(2)
+    let vltgOutput = parseFloat(levitonRes.data.power)?.toFixed(2)
     setVoltageOutput(vltgOutput)
     
-    const yaskawaRes = await api.ems.yaskawa.current()
+    const yaskawaRes = await api.ems.yaskawa.get({params: {limit: 1}})
     if (yaskawaRes.error){
       setLoading(false)
       return alert(yaskawaRes.error)
     }
     
-    const froniusModels = await api.ems.fronius.getModelNames()
+    const froniusModels = await api.ems.fronius.get()
     if (froniusModels.error) {
       setLoading(false)
       return alert(froniusModels.error) 
@@ -32,7 +32,7 @@ const CurrentUtilization = () => {
     
     
     const froniusData = await Promise.all(froniusModels.data.map(async (data) => {
-      const res = await api.ems.fronius.specific(data.model).current()
+      const res = await api.ems.fronius.get({params: {model: data.model, limit: 1}})
       if (res.error) {
         setLoading(false)
         return alert(res.error)
@@ -40,13 +40,13 @@ const CurrentUtilization = () => {
       return res
     }))
     
-    const sma7Data = await api.ems.sma7.current()
+    const sma7Data = await api.ems.sma7.get({params: {limit: 1}})
     if (sma7Data.error) {
       setLoading(false)
       return alert(sma7Data.error)
     }
     
-    const sma50Data = await api.ems.sma50.current()
+    const sma50Data = await api.ems.sma50.get({params: {limit: 1}})
     if (sma50Data.error) {
       setLoading(false)
       return alert(sma50Data.error)

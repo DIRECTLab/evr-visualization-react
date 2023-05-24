@@ -14,6 +14,7 @@ import {
 import { Line } from "react-chartjs-2";
 import api from "../../api";
 import Loading from "../Loading";
+import moment from "moment";
 
 Chart.register(
   CategoryScale,
@@ -45,40 +46,40 @@ export const options = {
   maintainAspectRatio: false,
 }
 
-const MonitorChart = () => {
+const limit = 1250;
 
+const MonitorChart = () => {
   
   const [chartData, setChartData] = useState({});
   const [loading, setLoading] = useState(true)
   const chartRef = useRef(null);
 
-
   const sumSolarData = async () => {
-    const yaskawaRes = await api.ems.yaskawa.getAll()
+    const yaskawaRes = await api.ems.yaskawa.get({params: {limit: limit}})
     if (yaskawaRes.error){
       setLoading(false)
     }
 
-    const froniusModels = await api.ems.fronius.getModelNames()
+    const froniusModels = await api.ems.fronius.get()
     if (froniusModels.error) {
       setLoading(false)
     }
 
     
     const froniusData = await Promise.all(froniusModels.data.map(async (data) => {
-      const res = await api.ems.fronius.specific(data.model).getModelData()
+      const res = await api.ems.fronius.get({params: {model: data.model, limit: limit}})
       if (res.error) {
         setLoading(false)
       }
       return res
     }))
 
-    const sma7Data = await api.ems.sma7.getAll()
+    const sma7Data = await api.ems.sma7.get({params: {limit: limit}})
     if (sma7Data.error) {
       setLoading(false)
     }
 
-    const sma50Data = await api.ems.sma50.getAll()
+    const sma50Data = await api.ems.sma50.get({params: {limit: limit}})
     if (sma50Data.error) {
       setLoading(false)
     }
@@ -98,14 +99,17 @@ const MonitorChart = () => {
   }
 
   const loadData = async () => {
-    const res = await api.getLeviton()
+    const res = await api.ems.leviton.get({params: {limit: limit}})
     if (res.error){
       return setLoading(false)
     }
     
-    const labels = res.data.map(data => data.time)
+
+    const labels = res.data.map(data => moment(data.timestamp).format("MMM D hh:mm a"))
     const data = res.data.map(data => data.power)
-    
+
+    labels.reverse(); // Need to reverse it since its in descending order
+    data.reverse(); // Needed to reverse it
     
     let sumArray = await sumSolarData()
 
@@ -115,6 +119,7 @@ const MonitorChart = () => {
       let sum = (sumArray[i] + data[i]);
       facPower.push(sum);
     }
+
 
 
     setChartData({
@@ -140,6 +145,7 @@ const MonitorChart = () => {
         }
       ]
     })
+
     setLoading(false)
   }
 

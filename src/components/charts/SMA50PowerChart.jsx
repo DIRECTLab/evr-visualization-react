@@ -55,7 +55,7 @@ const SMA50PowerChart = () => {
 
   
   const loadData = async () => {
-    const res = await api.ems.sma50.get100()
+    const res = await api.ems.sma50.get({params: {limit: 100}})
     if (res.error){
       setLoading(false)
     }

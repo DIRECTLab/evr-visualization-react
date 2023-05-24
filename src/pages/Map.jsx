@@ -27,7 +27,7 @@ const Map = () => {
   })
 
   const getChargers = async () => {
-		const chargersRes = await api.getChargers()
+		const chargersRes = await api.charger.get()
 		if (chargersRes.error) {
 			return alert(chargersRes.error)
 		}
@@ -52,7 +52,7 @@ const Map = () => {
   const loadData = async () => {
     getChargers()
     // Vericiti Busses
-    const busesRes = await api.viriciti.getAll();
+    const busesRes = await api.bus.viriciti.get();
     if (busesRes.error){
       setLoading(false)
       return alert(busesRes.error)
@@ -61,7 +61,8 @@ const Map = () => {
       let lat = null
       let long = null
       try {
-        const gpsRes = await api.viriciti.specific(bus.vid, 1).getGPS()
+        const gpsRes = await api.bus.viriciti.gps({params: {vid: bus.vid, limit: 1}});
+
         if (!gpsRes.error) {
           lat = gpsRes.data[0].lat
           long = gpsRes.data[0].long
@@ -70,7 +71,8 @@ const Map = () => {
 
       let soc = null
       try {
-        const socRes = await api.viriciti.specific(bus.vid, 1).getSOC()
+        const socRes = await api.bus.viriciti.soc({params: {vid: bus.vid, limit: 1}});
+
         if (!socRes.error) {
           soc = socRes.data[0].value
         }
@@ -85,7 +87,7 @@ const Map = () => {
     // 
 
     // New Flyer Busses
-    const newFlyerRes = await api.newflyer.getAll()
+    const newFlyerRes = await api.bus.newFlyer.get()
     if (newFlyerRes.error) {
       setLoading(false)
     }
@@ -94,7 +96,8 @@ const Map = () => {
       let long = null
       let soc = null
       try {
-        const specificBusRes = await api.newflyer.specific(bus.id).getRoute()
+        const specificBusRes = await api.bus.newFlyer.routes({params: {id: bus.id, recent: true}});
+
         lat = specificBusRes.data.lastRoute.latitude
         long = specificBusRes.data.lastRoute.longitude
         soc = specificBusRes.data.lastRoute.soc
