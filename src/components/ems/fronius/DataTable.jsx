@@ -11,6 +11,8 @@ import Loading from '../../Loading'
 import { useParams } from 'react-router-dom'
 
 const DataTable = ({id}) => {
+  const [pageIndex, setPageIndex] = useState(0);
+  const [pageSize, setPageSize] = useState(10);
 
   const columns = [
     {
@@ -153,7 +155,7 @@ const DataTable = ({id}) => {
 
 
   const loadData = async () => {
-    const res = await api.ems.fronius.get({params: {model: id, limit: 100}});
+    const res = await api.ems.fronius.get({params: {model: id, page: pageIndex, pageSize: pageSize}});
     if (res.error) {
       setLoading(false)
       return alert(res.error)
@@ -168,7 +170,7 @@ const DataTable = ({id}) => {
 
   useEffect(() => {
     loadData()
-  }, [])
+  }, [pageIndex, pageSize])
   
 
   const table = useReactTable({
@@ -221,6 +223,32 @@ const DataTable = ({id}) => {
             </tbody>
           </table>
         </div>
+        <div className="h-2" />
+        <div className="btn-group border-primary">
+          <button
+            className="btn"
+            disabled={pageIndex === 0}
+            onClick={() => setPageIndex(0)}
+          >«</button>
+          <button
+            className="btn"
+            disabled={pageIndex === 0}
+            onClick={() => setPageIndex(old => old - 1)}
+          >‹</button>
+          <button className="btn">Page {pageIndex}</button>
+          <button onClick={() => setPageIndex(old => old + 1)} className="btn">›</button>
+        </div>
+        <select
+          className="select select-primary w-full max-w-xs ml-4"
+          defaultValue={{ label: 'Items per page', value: pageSize }}
+          onChange={(e) => { setPageSize(e.target.value); }}
+        >
+          <option disabled>Items per Page</option>
+          <option value={10}>10</option>
+          <option value={25}>25</option>
+          <option value={50}>50</option>
+          <option value={100}>100</option>
+        </select>
       </div>
       
     )

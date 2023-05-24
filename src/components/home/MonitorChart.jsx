@@ -46,7 +46,7 @@ export const options = {
   maintainAspectRatio: false,
 }
 
-const limit = 1250;
+const limit = 1000;
 
 const MonitorChart = () => {
   

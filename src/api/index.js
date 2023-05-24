@@ -67,56 +67,6 @@ const api = {
       get: r('get', 'yaskawa'),
     },
   },
-  // getLeviton: async () => {
-  //   const res = await r('get', 'evr/leviton/evr?limit=1250')();
-  //   return {data: res.data.map(d => ({ ...d, time: moment(d.timestamp).format('MMM DD h:mma') })).reverse()};
-  // },
-  // getLevitonByDate: async (dateStart, dateEnd) => {
-  //   const res = await r('get', `evr/leviton/evr?dateStart=${dateStart.toString()}&dateEnd=${dateEnd.toString()}`)();
-  //   return {data: res.data.map(d => ({ ...d, time: moment(d.timestamp).format('MMM DD h:mma') })).reverse()};
-  // },
-  // getCurrentLeviton: async () => {
-  //   const res = await r('get', 'evr/leviton/evr?limit=1')();
-  //   return {data: res.data.map(d => ({ ...d, time: moment(d.timestamp).format('MMM DD h:mma') })).reverse()};
-  // },
-  // tpss: ({
-  //   getAll: r('get', 'tpss/'),
-  // }),
-  // ems: ({
-  //   yaskawa: ({
-  //     getAll: r('get', 'evr/yaskawa?limit=1250'),
-  //     get100: r('get', 'evr/yaskawa?limit=100'),
-  //     getStatus: r('get', 'yaskawa?alive=true'),
-  //     current: r('get', 'evr/yaskawa?limit=1')
-  //   }),
-  //   gustav_klein: ({
-  //     getAll: r('get', 'evr/gustav?limit=1250'), // TODO change this
-  //     get100: r('get', 'evr/gustav?limit=100'),
-  //     getStatus: r('get', 'gustav?alive=true'),
-  //     current: r('get', 'evr/gustav?limit=1')
-  //   }),
-  //   fronius: ({
-  //     getModelNames: r('get', 'evr/fronius'),
-  //     specific: (model) => ({
-  //       getModelData: r('get', `evr/fronius/${model}?limit=1250`),
-  //       get100: r('get', `evr/fronius/${model}?limit=100`),
-  //       getStatus: r('get', `fronius?model=${model}&alive=true`),
-  //       current: r('get', `evr/fronius/${model}?limit=1`)
-  //     })
-  //   }),
-  //   sma50: ({
-  //     getAll: r('get', 'evr/sma50?limit=1250'),
-  //     get100: r('get', 'evr/sma50?limit=100'),
-  //     getStatus: r('get', 'sma50?alive=true'),
-  //     current: r('get', 'evr/sma50?limit=1'),
-  //   }),
-  //   sma7: ({
-  //     getAll: r('get', 'evr/sma7?limit=1250'),
-  //     get100: r('get', 'evr/sma7?limit=100'),
-  //     current: r('get', 'evr/sma7?limit=1'),
-  //     getStatus: r('get', 'sma7?alive=true')
-  //   })
-  // }),
 }
 
 export default api
