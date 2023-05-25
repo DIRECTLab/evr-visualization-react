@@ -29,38 +29,38 @@ const GraphCarousel = () => {
     if (yaskawaRes.error) {
       return alert(yaskawaRes.error)
     }
-    setYaskawaStatus(yaskawaRes.data.active)
+    setYaskawaStatus(yaskawaRes?.data.active ?? false)
     
     const sma50Res = await api.ems.sma50.get({params: {alive: true}});
     if (sma50Res.error) {
       return alert(sma50Res.error)
     }
-    setSma50Status(sma50Res.data.active)
+    setSma50Status(sma50Res?.data.active ?? false)
 
     const sma7Res = await api.ems.sma7.get({params: {alive: true}});
     if (sma7Res.error){
       return alert(sma7Res.error)
     }
-    setSma7Status(sma7Res.data.active)
+    setSma7Status(sma7Res?.data.active ?? false)
 
     const symoStatus = await api.ems.fronius.get({params: {model: 'symo', alive: true}});
     if (symoStatus.error) {
       return alert(symoStatus.error)
     }
-    setSymoStatus(symoStatus.data.active)
+    setSymoStatus(symoStatus?.data.active ?? false)
 
     const primoStatus = await api.ems.fronius.get({params: {model: 'primo', alive: true}});
     if (primoStatus.error) {
       return alert(primoStatus.error)
     }
-    setPrimoStatus(primoStatus.data.active)
+    setPrimoStatus(primoStatus?.data.active ?? false)
 
     
     const gustavStatus = await api.ems.gustav.get({params: {alive: true}});
     if (gustavStatus.error) {
       return alert(gustavStatus.error)
     }
-    setGustavStatus(gustavStatus.data.active)
+    setGustavStatus(gustavStatus?.data.active ?? false)
 
     setLoading(false)
   }

@@ -46,24 +46,77 @@ export const options = {
   maintainAspectRatio: true,
 }
 
+let newestPointDate = null;
+const maxData = 200;
+const pageSize = 25;
+
+let currentPage = 0;
+let _data = [];
+let _labels = [];
 
 const SMA7PowerChart = () => {
   const [chartData, setChartData] = useState({});
   const [loading, setLoading] = useState(true)
   const chartRef = useRef(null);
 
+  const [labels, setLabels] = useState([]);
+  const [data, setData] = useState([]);
 
-  
   const loadData = async () => {
-    const res = await api.ems.sma7.get({params: {limit: 100}})
-    if (res.error){
+    while ((currentPage) * pageSize < maxData) {
+      const res = await api.ems.sma7.get({ params: { page: currentPage, pageSize: pageSize } })
+      if (res.error) {
+        setLoading(false)
+      }
+      let subsetLabels = res.data.map(data => moment(data.updatedAt).format('LTS')).reverse();
+      let subsetData = res.data.map(data => data.acPower).reverse();
+
+      if (_data.length === 0) { // This is the newest data
+        newestPointDate = res.data[0].createdAt;
+        _data = subsetData;
+        _labels = subsetLabels;
+      } else {
+        if (_labels[0] === subsetLabels[0]) {
+          continue
+        }
+        _labels = [...subsetLabels, ..._labels];
+        _data = [...subsetData, ..._data];
+      }
+      setLoading(false)
+
+      setData(_data)
+      setLabels(_labels)
+
+      currentPage++;
+    }
+  }
+
+  const loadNewData = async () => {
+    // Get newest data starting from newestPointDate
+    const res = await api.ems.sma7.get({ params: { limit: 200, start: moment(newestPointDate).add(1, 'seconds') } });
+    if (res.error) {
       setLoading(false)
     }
-    
-    const labels = res.data.map(data => moment(data.updatedAt).format('LTS')).reverse()
-    const data = res.data.map(data => data.acPower).reverse()
+    if (res.data && res?.data.length > 0) {
+      newestPointDate = res.data[0].createdAt;
+      let subsetLabels = res.data.map(data => moment(data.updatedAt).format('LTS')).reverse();
+      let subsetData = res.data.map(data => data.acPower).reverse();
 
+      _labels = [..._labels, ...subsetLabels];
+      _data = [..._data, ...subsetData];
 
+      // removes oldest values
+      if (_data.length > maxData) {
+        _data = _data.slice(_data.length - maxData);
+        _labels = _labels.slice(_labels.length - maxData);
+      }
+      setData(_data)
+      setLabels(_labels)
+    }
+
+  }
+
+  useEffect(() => {
     setChartData({
       labels: labels,
       datasets: [
@@ -75,19 +128,18 @@ const SMA7PowerChart = () => {
         },
       ]
     })
-    setLoading(false)
-  }
+  }, [labels, data])
 
   useEffect(() => {
     setLoading(true)
     loadData()
-    
+
     const intervalId = setInterval(() => {
-      loadData()
+      loadNewData()
     }, 7000)
 
     return () => {
-      clearInterval(intervalId); 
+      clearInterval(intervalId);
     }
   }, [])
 
@@ -97,7 +149,7 @@ const SMA7PowerChart = () => {
     )
   }
   else {
-    return(
+    return (
       <div className="w-full h-full">
         <Line
           datasetIdKey='id'
