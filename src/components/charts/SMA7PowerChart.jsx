@@ -54,6 +54,7 @@ let currentPage = 0;
 let _data = [];
 let _labels = [];
 
+let resData = [];
 const SMA7PowerChart = () => {
   const [chartData, setChartData] = useState({});
   const [loading, setLoading] = useState(true)
@@ -68,25 +69,16 @@ const SMA7PowerChart = () => {
       if (res.error) {
         setLoading(false)
       }
-      let subsetLabels = res.data.map(data => moment(data.updatedAt).format('LTS')).reverse();
-      let subsetData = res.data.map(data => data.acPower).reverse();
+      resData.push(...res.data);
+      resData.sort((a, b) => a.id - b.id);
 
-      if (_data.length === 0) { // This is the newest data
-        newestPointDate = res.data[0].createdAt;
-        _data = subsetData;
-        _labels = subsetLabels;
-      } else {
-        if (_labels[0] === subsetLabels[0]) {
-          continue
-        }
-        _labels = [...subsetLabels, ..._labels];
-        _data = [...subsetData, ..._data];
-      }
-      setLoading(false)
+      _data = resData.map(data => data.acPower);
+      _labels = resData.map(data => moment(data.updatedAt).format('LTS'));
 
-      setData(_data)
-      setLabels(_labels)
-
+      setData(_data);
+      setLabels(_labels);
+      setLoading(false);
+      
       currentPage++;
     }
   }
@@ -99,17 +91,19 @@ const SMA7PowerChart = () => {
     }
     if (res.data && res?.data.length > 0) {
       newestPointDate = res.data[0].createdAt;
-      let subsetLabels = res.data.map(data => moment(data.updatedAt).format('LTS')).reverse();
-      let subsetData = res.data.map(data => data.acPower).reverse();
+      resData.push(...res.data)
+      resData.sort((a, b) => a.id - b.id)
 
-      _labels = [..._labels, ...subsetLabels];
-      _data = [..._data, ...subsetData];
+      _data = resData.map(data => data.acPower);
+      _labels = resData.map(data => moment(data.updatedAt).format('LTS'));
 
       // removes oldest values
       if (_data.length > maxData) {
         _data = _data.slice(_data.length - maxData);
         _labels = _labels.slice(_labels.length - maxData);
       }
+
+
       setData(_data)
       setLabels(_labels)
     }
