@@ -46,16 +46,16 @@ export const options = {
   maintainAspectRatio: true,
 }
 
-let newestPointDate = null;
 const maxData = 200;
 const pageSize = 25;
 
-let currentPage = 0;
-let _data = [];
-let _labels = [];
-
-let resData = [];
 const PrimoPowerChart = () => {
+  let newestPointDate = null;
+  let currentPage = 0;
+  let _data = [];
+  let _labels = [];
+  
+  let resData = [];
   const [chartData, setChartData] = useState({});
   const [loading, setLoading] = useState(true)
   const chartRef = useRef(null);
@@ -64,7 +64,7 @@ const PrimoPowerChart = () => {
   const [data, setData] = useState([]);
 
   const loadData = async () => {
-    while ((currentPage) * pageSize < maxData) {
+    while (currentPage * pageSize < maxData) {
       const res = await api.ems.fronius.get({ params: { page: currentPage, pageSize: pageSize, model: 'primo' } })
       if (res.error) {
         setLoading(false)

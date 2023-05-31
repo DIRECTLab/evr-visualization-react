@@ -46,17 +46,17 @@ export const options = {
   maintainAspectRatio: true,
 }
 
-let newestPointDate = null;
 const maxData = 200;
 const pageSize = 25;
 
-let currentPage = 0;
-let _data = [];
-let _labels = [];
-let resData = [];
 
 
 const YaskawaPowerChart = () => {
+  let newestPointDate = null;
+  let currentPage = 0;
+  let _data = [];
+  let _labels = [];
+  let resData = [];
   const [chartData, setChartData] = useState({});
   const [loading, setLoading] = useState(true)
 
@@ -66,7 +66,7 @@ const YaskawaPowerChart = () => {
   
   const loadData = async () => {
 
-    while ((currentPage) * pageSize < maxData){
+    while (currentPage * pageSize < maxData){
       const res = await api.ems.yaskawa.get({params: {page: currentPage, pageSize: pageSize}})
       if (res.error){
         setLoading(false)
