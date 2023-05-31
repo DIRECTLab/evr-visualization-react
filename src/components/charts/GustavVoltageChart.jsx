@@ -137,7 +137,7 @@ const GustavVoltageChart = () => {
     loadData()
 
     const intervalId = setInterval(() => {
-      loadData()
+      loadNewData()
     }, 7000)
 
     return () => {
