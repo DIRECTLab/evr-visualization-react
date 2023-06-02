@@ -89,12 +89,6 @@ const UsuChargers = () => {
               <div className="stat-value pb-4">{charger.curtailmentLimit} {charger.curtailmentLimit ? 'kW' : 'Not Set'}</div>
               <div className="stat-title font-bold text-xl">Status</div>
               <div className="stat-value text-md pb-4">{charger.status}</div>
-              {/* {charger.meterValue &&
-              <>
-                <div className="stat-title font-bold text-xl">Meter Value</div>
-                <div className="stat-value text-md pb-4">{charger.meterValue} {charger.meterValue ? 'kW' : 'No Data'}</div>
-              </>
-              } */}
               {charger.soc && 
               <>
                 <div className="stat-title font-bold text-xl">Charge Level</div>
