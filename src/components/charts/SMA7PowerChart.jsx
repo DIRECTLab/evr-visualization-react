@@ -88,7 +88,7 @@ const SMA7PowerChart = () => {
 
   const loadNewData = async () => {
     // Get newest data starting from newestPointDate
-    const res = await api.ems.sma7.get({ params: { limit: 200, start: moment(newestPointDate).add(1, 'seconds') } });
+    const res = await api.ems.sma7.get({ params: { limit: 200, start: moment(newestPointDate).add(1, 'seconds').toISOString() } });
     if (res.error) {
       setLoading(false)
     }

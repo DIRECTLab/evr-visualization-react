@@ -104,7 +104,7 @@ const SymoPowerChart = () => {
 
   const loadNewData = async () => {
     // Get newest data starting from newestPointDate
-    const res = await api.ems.fronius.get({ params: { limit: 200, start: moment(newestPointDate).add(1, 'seconds'), model: 'symo' } });
+    const res = await api.ems.fronius.get({ params: { limit: 200, start: moment(newestPointDate).add(1, 'seconds').toISOString(), model: 'symo' } });
     if (res.error) {
       setLoading(false)
     }

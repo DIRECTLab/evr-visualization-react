@@ -103,7 +103,7 @@ const PrimoPowerChart = () => {
 
   const loadNewData = async () => {
     // Get newest data starting from newestPointDate
-    const res = await api.ems.fronius.get({ params: { limit: 200, start: moment(newestPointDate).add(1, 'seconds'), model: 'primo' } });
+    const res = await api.ems.fronius.get({ params: { limit: 200, start: moment(newestPointDate).add(1, 'seconds').toISOString(), model: 'primo' } });
     if (res.error) {
       setLoading(false)
     }

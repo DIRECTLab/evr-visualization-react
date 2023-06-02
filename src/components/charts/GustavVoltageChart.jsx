@@ -103,7 +103,7 @@ const GustavVoltageChart = () => {
 
   const loadNewData = async () => {
     // Get newest data starting from newestPointDate
-    const res = await api.ems.gustav.get({ params: { limit: 200, start: moment(newestPointDate).add(1, 'seconds')} });
+    const res = await api.ems.gustav.get({ params: { limit: 200, start: moment(newestPointDate).add(1, 'seconds').toISOString()} });
     if (res.error) {
       setLoading(false)
     }

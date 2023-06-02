@@ -117,7 +117,7 @@ const MonitorChart = () => {
   const loadNewLeviton = async () => {
     let _labels = []; // This just uses leviton's timestamps for the labels
     let _levitonData = [];
-    const res = await api.ems.leviton.get({params: {limit: 200, start: moment(newestLevitonPointDate).add(1, 'seconds')}});
+    const res = await api.ems.leviton.get({params: {limit: 200, start: moment(newestLevitonPointDate).add(1, 'seconds').toISOString()}});
     if (res.error){
       setLoading(false)
       return alert(res.error);
@@ -164,7 +164,7 @@ const MonitorChart = () => {
 
   const loadNewYaskawa = async () => {
     let _yaskawaData = [];
-    const res = await api.ems.yaskawa.get({params: {limit: 200, start: moment(newestYaskawaPointDate).add(1, 'seconds')}});
+    const res = await api.ems.yaskawa.get({params: {limit: 200, start: moment(newestYaskawaPointDate).add(1, 'seconds').toISOString()}});
     if (res.error){
       setLoading(false);
       return alert(res.error);
@@ -207,7 +207,7 @@ const MonitorChart = () => {
 
   const loadNewSymo = async () => {
     let _symoData = [];
-    const res = await api.ems.fronius.get({params: {model: 'symo', limit: 200, start: moment(newestSymoPointDate).add(1, 'seconds')}});
+    const res = await api.ems.fronius.get({params: {model: 'symo', limit: 200, start: moment(newestSymoPointDate).add(1, 'seconds').toISOString()}});
     if (res.error){
       setLoading(false);
       return alert(res.error);
@@ -250,7 +250,7 @@ const MonitorChart = () => {
 
   const loadNewPrimo = async () => {
     let _primoData = [];
-    const res = await api.ems.fronius.get({params: {model: 'primo', limit: 200, start: moment(newestPrimoPointDate).add(1, 'seconds')}});
+    const res = await api.ems.fronius.get({params: {model: 'primo', limit: 200, start: moment(newestPrimoPointDate).add(1, 'seconds').toISOString()}});
     if (res.error){
       setLoading(false);
       return alert(res.error);
@@ -293,7 +293,7 @@ const MonitorChart = () => {
 
   const loadNewSma50 = async () => {
     let _sma50Data = [];
-    const res = await api.ems.sma50.get({params: {limit: 200, start: moment(newestSma50PointDate).add(1, 'seconds')}});
+    const res = await api.ems.sma50.get({params: {limit: 200, start: moment(newestSma50PointDate).add(1, 'seconds').toISOString()}});
     if (res.error){
       setLoading(false);
       return alert(res.error);
@@ -336,7 +336,7 @@ const MonitorChart = () => {
 
   const loadNewSma7 = async () => {
     let _sma7Data = [];
-    const res = await api.ems.sma7.get({params: {limit: 200, start: moment(newestSma7PointDate).add(1, 'seconds')}});
+    const res = await api.ems.sma7.get({params: {limit: 200, start: moment(newestSma7PointDate).add(1, 'seconds').toISOString()}});
     if (res.error){
       setLoading(false);
       return alert(res.error);
