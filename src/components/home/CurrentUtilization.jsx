@@ -9,6 +9,11 @@ const CurrentUtilization = () => {
   const [voltageOutput, setVoltageOutput] = useState(null)
   const [facilityPower, setFacilityPower] = useState(null)
 
+  const [loadingSolar, setLoadingSolar] = useState(true);
+  const [loadingUtility, setLoadingUtility] = useState(true);
+  const [loadingEVRLoad, setLoadingEVRLoad] = useState(true);
+
+
   const loadData = async () => {
     const levitonRes = await api.ems.leviton.get({params: {current: true}});
     if (levitonRes.error){
@@ -17,6 +22,8 @@ const CurrentUtilization = () => {
     }
     let vltgOutput = parseFloat(levitonRes.data.power)?.toFixed(2)
     setVoltageOutput(vltgOutput)
+    setLoadingUtility(false);
+
     
     const yaskawaRes = await api.ems.yaskawa.get({params: {limit: 1}})
     if (yaskawaRes.error){
@@ -62,13 +69,14 @@ const CurrentUtilization = () => {
 
     sum = sum.toFixed(2)
     setTotalSolar(sum)
+    setLoadingSolar(false);
     
 
     let facPower = parseFloat(sum) + parseFloat(vltgOutput)
     facPower = facPower.toFixed(2)
     setFacilityPower(facPower)
+    setLoadingEVRLoad(false);
     
-    setLoading(false)
   }
   
   
@@ -82,24 +90,22 @@ const CurrentUtilization = () => {
       clearInterval(intervalId)
     }
   }, [])
-  if (loading) {
-    return(
-      <Loading />
-    )
-  }
   return (
     <div className="justify-center text-center">
       <div className="stats shadow text-center">
         <div className="stat place-items-center">
           <div className="stat-title font-bold text-xl">Total Solar Power (kW)</div>
+          {loadingSolar && <Loading />}
           <div className="stat-value text-md pb-4">{totalSolar}</div>
         </div>
         <div className="stat place-items-center">
           <div className="stat-title font-bold text-xl">Utility Power (kW)</div>
+          {loadingUtility && <Loading />}
           <div className="stat-value text-md pb-4">{voltageOutput}</div>
         </div>
         <div className="stat place-items-center">
           <div className="stat-title font-bold text-xl">EVR Load (kW)</div>
+          {loadingEVRLoad && <Loading />}
           <div className="stat-value text-md pb-4">{facilityPower}</div>
         </div>
       </div>

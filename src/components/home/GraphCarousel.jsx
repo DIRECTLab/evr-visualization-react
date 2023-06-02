@@ -30,6 +30,7 @@ const GraphCarousel = () => {
       return alert(yaskawaRes.error)
     }
     setYaskawaStatus(yaskawaRes?.data.active ?? false)
+    setLoading(false)
     
     const sma50Res = await api.ems.sma50.get({params: {alive: true}});
     if (sma50Res.error) {
@@ -62,7 +63,6 @@ const GraphCarousel = () => {
     }
     setGustavStatus(gustavStatus?.data.active ?? false)
 
-    setLoading(false)
   }
 
 
