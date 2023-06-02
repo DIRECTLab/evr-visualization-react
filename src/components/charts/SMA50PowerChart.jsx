@@ -73,6 +73,9 @@ const SMA50PowerChart = () => {
       if (res.error) {
         setLoading(false)
       }
+      if (currentPage === 0) {
+        newestPointDate = res.data[0].createdAt;
+      }
       resData.push(...res.data)
       resData.sort((a, b) => a.id - b.id)
 

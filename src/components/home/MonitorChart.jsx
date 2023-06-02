@@ -62,29 +62,12 @@ const MonitorChart = () => {
   let newestSma7PointDate = null;
   let newestSma50PointDate = null;
 
-  let levitonPage = 0;
-  let _labels = []; // This just uses leviton's timestamps for the labels
-  let _levitonData = [];
+
   let levitonResData = [];
-
-  let yaskawaPage = 0;
-  let _yaskawaData = [];
   let yaskawaResData = [];
-
-  let primoPage = 0;
-  let _primoData = [];
   let primoResData = [];
-
-  let symoPage = 0;
-  let _symoData = [];
   let symoResData = [];
-
-  let sma7Page = 0;
-  let _sma7Data = [];
   let sma7ResData = [];
-
-  let sma50Page = 0;
-  let _sma50Data = [];
   let sma50ResData = [];
 
   const firstRender = useRef(true);
@@ -107,14 +90,22 @@ const MonitorChart = () => {
 
 
   const loadLeviton = async () => {
-    while (levitonPage * pageSize < maxData) {
+    let levitonPage = 0;
+    let _labels = []; // This just uses leviton's timestamps for the labels
+    let _levitonData = [];
+
+    while (levitonPage * pageSize <= maxData) {
       const res = await api.ems.leviton.get({ params: { page: levitonPage, pageSize: pageSize } })
-      levitonPage++;
       if (res.error) {
-        return setLoading(false)
+        setLoading(false)
+        return alert(res.error);
       }
-      levitonResData.push(...res.data);
-      levitonResData.sort((a, b) => a.id - b.id);
+      if (levitonPage === 0) {
+        newestLevitonPointDate = res.data[0].createdAt;
+      }
+      levitonPage++;
+      levitonResData.push(...res.data)
+      levitonResData.sort((a, b) => a.timestamp - b.timestamp);
       _levitonData = levitonResData.map(data => data.power).reverse();
       _labels = levitonResData.map(data => moment(data.updatedAt).format('LTS')).reverse();
       setLabels(_labels);
@@ -124,14 +115,44 @@ const MonitorChart = () => {
   }
 
   const loadNewLeviton = async () => {
+    let _labels = []; // This just uses leviton's timestamps for the labels
+    let _levitonData = [];
+    const res = await api.ems.leviton.get({params: {limit: 200, start: moment(newestLevitonPointDate).add(1, 'seconds')}});
+    if (res.error){
+      setLoading(false)
+      return alert(res.error);
+    }
+    if (res.data && res?.data.length > 0) {
+      newestLevitonPointDate = res.data[0].createdAt;
+      levitonResData.unshift(...res.data)
+      levitonResData.sort((a, b) => a.timestamp - b.timestamp)
 
+      _levitonData = levitonResData.map(data => data.power).reverse();
+      _labels = levitonResData.map(data => moment(data.updatedAt).format('LTS')).reverse();
+
+      // removes oldest values
+      if (_levitonData.length > maxData) {
+        _levitonData = _levitonData.slice(_levitonData.length - maxData);
+        _labels = _labels.slice(_labels.length - maxData);
+      }
+
+
+      setLevitonData(_levitonData)
+      setLabels(_labels)
+    }
   }
 
   const loadYaskawa = async () => {
-    while (yaskawaPage * pageSize < maxData) {
+    let yaskawaPage = 0;
+    let _yaskawaData = [];
+    while (yaskawaPage * pageSize <= maxData) {
       const res = await api.ems.yaskawa.get({ params: { page: yaskawaPage, pageSize: pageSize } })
       if (res.error) {
-        setLoading(false)
+        setLoading(false);
+        return alert(res.error);
+      }
+      if (yaskawaPage === 0) {
+        newestYaskawaPointDate = res.data[0].createdAt;
       }
       yaskawaResData.push(...res.data)
       yaskawaResData.sort((a, b) => a.id - b.id)
@@ -141,11 +162,40 @@ const MonitorChart = () => {
     }
   };
 
+  const loadNewYaskawa = async () => {
+    let _yaskawaData = [];
+    const res = await api.ems.yaskawa.get({params: {limit: 200, start: moment(newestYaskawaPointDate).add(1, 'seconds')}});
+    if (res.error){
+      setLoading(false);
+      return alert(res.error);
+    }
+    if (res.data && res?.data.length > 0) {
+      newestYaskawaPointDate = res.data[0].createdAt;
+      yaskawaResData.push(...res.data);
+      yaskawaResData.sort((a, b) => a.id - b.id);
+
+      _yaskawaData = yaskawaResData.map(data => data.activeAcPower);
+
+      // removes oldest values
+      if (_yaskawaData.length > maxData) {
+        _yaskawaData = _yaskawaData.slice(_yaskawaData.length - maxData);
+      }
+
+      setYaskawaData(_yaskawaData);
+    }
+  }
+
   const loadSymo = async () => {
-    while (symoPage * pageSize < maxData) {
+    let symoPage = 0;
+    let _symoData = [];
+    while (symoPage * pageSize <= maxData) {
       const res = await api.ems.fronius.get({ params: { page: symoPage, pageSize: pageSize, model: 'symo' } })
       if (res.error) {
-        setLoading(false)
+        setLoading(false);
+        return alert(res.error);
+      }
+      if (symoPage === 0) {
+        newestSymoPointDate = res.data[0].createdAt;
       }
       symoResData.push(...res.data);
       symoResData.sort((a, b) => a.id - b.id);
@@ -155,11 +205,40 @@ const MonitorChart = () => {
     }
   };
 
+  const loadNewSymo = async () => {
+    let _symoData = [];
+    const res = await api.ems.fronius.get({params: {model: 'symo', limit: 200, start: moment(newestSymoPointDate).add(1, 'seconds')}});
+    if (res.error){
+      setLoading(false);
+      return alert(res.error);
+    }
+    if (res.data && res?.data.length > 0) {
+      newestSymoPointDate = res.data[0].createdAt;
+      symoResData.push(...res.data);
+      symoResData.sort((a, b) => a.id - b.id);
+
+      _symoData = symoResData.map(data => data.acPower);
+
+      // removes oldest values
+      if (_symoData.length > maxData) {
+        _symoData = _symoData.slice(_symoData.length - maxData);
+      }
+
+      setSymoData(_symoData);
+    }
+  }
+
   const loadPrimo = async () => {
-    while (primoPage * pageSize < maxData) {
+    let primoPage = 0;
+    let _primoData = [];
+    while (primoPage * pageSize <= maxData) {
       const res = await api.ems.fronius.get({ params: { page: primoPage, pageSize: pageSize, model: 'primo' } })
       if (res.error) {
         setLoading(false);
+        return alert(res.error);
+      }
+      if (primoPage === 0) {
+        newestPrimoPointDate = res.data[0].createdAt;
       }
       primoResData.push(...res.data);
       primoResData.sort((a, b) => a.id - b.id);
@@ -169,11 +248,40 @@ const MonitorChart = () => {
     }
   }
 
+  const loadNewPrimo = async () => {
+    let _primoData = [];
+    const res = await api.ems.fronius.get({params: {model: 'primo', limit: 200, start: moment(newestPrimoPointDate).add(1, 'seconds')}});
+    if (res.error){
+      setLoading(false);
+      return alert(res.error);
+    }
+    if (res.data && res?.data.length > 0) {
+      newestPrimoPointDate = res.data[0].createdAt;
+      primoResData.push(...res.data);
+      primoResData.sort((a, b) => a.id - b.id);
+
+      _primoData = primoResData.map(data => data.acPower / 1000);
+
+      // removes oldest values
+      if (_primoData.length > maxData) {
+        _primoData = _primoData.slice(_primoData.length - maxData);
+      }
+
+      setPrimoData(_primoData);
+    }
+  }
+
   const loadSma50 = async () => {
-    while (sma50Page * pageSize < maxData) {
+    let sma50Page = 0;
+    let _sma50Data = [];
+    while (sma50Page * pageSize <= maxData) {
       const res = await api.ems.sma50.get({ params: { page: sma50Page, pageSize: pageSize } })
       if (res.error) {
-        setLoading(false)
+        setLoading(false);
+        return alert(res.error);
+      }
+      if (sma50Page === 0) {
+        newestSma50PointDate = res.data[0].createdAt;
       }
       sma50ResData.push(...res.data);
       sma50ResData.sort((a, b) => a.id - b.id);
@@ -183,11 +291,40 @@ const MonitorChart = () => {
     }
   }
 
+  const loadNewSma50 = async () => {
+    let _sma50Data = [];
+    const res = await api.ems.sma50.get({params: {limit: 200, start: moment(newestSma50PointDate).add(1, 'seconds')}});
+    if (res.error){
+      setLoading(false);
+      return alert(res.error);
+    }
+    if (res.data && res?.data.length > 0) {
+      newestSma50PointDate = res.data[0].createdAt;
+      sma50ResData.push(...res.data);
+      sma50ResData.sort((a, b) => a.id - b.id);
+
+      _sma50Data = sma50ResData.map(data => data.acPower);
+
+      // removes oldest values
+      if (_sma50Data.length > maxData) {
+        _sma50Data = _sma50Data.slice(_sma50Data.length - maxData);
+      }
+
+      setSma50Data(_sma50Data);
+    }
+  }
+
   const loadSma7 = async () => {
-    while (sma7Page * pageSize < maxData) {
+    let sma7Page = 0;
+    let _sma7Data = [];
+    while (sma7Page * pageSize <= maxData) {
       const res = await api.ems.sma7.get({ params: { page: sma7Page, pageSize: pageSize } })
       if (res.error) {
-        setLoading(false)
+        setLoading(false);
+        return alert(res.error);
+      }
+      if (sma7Page === 0) {
+        newestSma7PointDate = res.data[0].createdAt;
       }
       sma7ResData.push(...res.data);
       sma7ResData.sort((a, b) => a.id - b.id);
@@ -196,6 +333,31 @@ const MonitorChart = () => {
       sma7Page++;
     }
   }
+
+  const loadNewSma7 = async () => {
+    let _sma7Data = [];
+    const res = await api.ems.sma7.get({params: {limit: 200, start: moment(newestSma7PointDate).add(1, 'seconds')}});
+    if (res.error){
+      setLoading(false);
+      return alert(res.error);
+    }
+    if (res.data && res?.data.length > 0) {
+      newestSma7PointDate = res.data[0].createdAt;
+      sma7ResData.push(...res.data);
+      sma7ResData.sort((a, b) => a.id - b.id);
+
+      _sma7Data = sma7ResData.map(data => data.acPower);
+
+      // removes oldest values
+      if (_sma7Data.length > maxData) {
+        _sma7Data = _sma7Data.slice(_sma7Data.length - maxData);
+      }
+
+      setSma7Data(_sma7Data);
+    }
+  }
+
+  
 
   useEffect(() => {
     setChartData({
@@ -258,7 +420,12 @@ const MonitorChart = () => {
     }
 
     const intervalId = setInterval(() => {
-      // loadLeviton()
+      loadNewLeviton();
+      loadNewYaskawa();
+      loadNewSymo();
+      loadNewPrimo();
+      loadNewSma50();
+      loadNewSma7();
     }, 7000)
 
     return () => {
