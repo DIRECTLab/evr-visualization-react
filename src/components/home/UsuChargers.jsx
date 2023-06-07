@@ -46,7 +46,7 @@ const UsuChargers = () => {
         setLoading(false);
         return alert(chargerProfileRes.error);
       }
-      charger.manualControl = chargerProfileRes.data.manualControl
+      charger.manualControl = chargerProfileRes?.data?.manualControl
       charger.cleared = chargerProfileRes?.data?.cleared
       
       // Get Meter Values
@@ -83,7 +83,7 @@ const UsuChargers = () => {
     let inManualMode = false;
     for (let i = 0; i < usuChargers.length; i++) {
   
-      if (usuChargers[i].manualControl && !usuChargers[i].cleared) {
+      if (usuChargers[i]?.manualControl && !usuChargers[i]?.cleared) {
         inManualMode = true;
       } 
     }
