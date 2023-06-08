@@ -18,8 +18,8 @@ const requestGenerator = (getBase) => (method, uri) => (data = {}) => {
     .catch(e => e.response.data);
 };
 
-// const getApiBase = () => 'http://144.39.204.242:11236';
-const getApiBase = () => 'http://localhost:11236'
+const getApiBase = () => 'http://144.39.204.242:11240'; // Production
+// const getApiBase = () => 'http://localhost:11236' // Development
 const r = requestGenerator(getApiBase);
 
 const api = {

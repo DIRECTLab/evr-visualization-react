@@ -2,6 +2,7 @@ import Loading from "../Loading";
 
 import api from "../../api";
 import { useEffect, useState } from "react";
+import moment from "moment";
 
 const CurrentUtilization = () => {
   const [totalSolar, setTotalSolar] = useState(null)
@@ -19,14 +20,15 @@ const CurrentUtilization = () => {
       return alert(levitonRes.error)
     }
     let vltgOutput = parseFloat(levitonRes.data.power)?.toFixed(2)
+    
     setVoltageOutput(vltgOutput)
     setLoadingUtility(false);
 
-    
     const yaskawaRes = await api.ems.yaskawa.get({params: {limit: 1}})
     if (yaskawaRes.error){
       return alert(yaskawaRes.error)
     }
+    
     
     const froniusModels = await api.ems.fronius.get()
     if (froniusModels.error) {

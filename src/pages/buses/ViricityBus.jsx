@@ -87,7 +87,7 @@ const VircitiBus = () => {
       let soc = null
       let currentSOC = null
       try{
-        const socRes = await api.bus.viriciti.soc({params: {vid: bus.vid, limit: 500}});
+        const socRes = await api.bus.viriciti.soc({params: {vid: bus.vid, limit: 100}});
 
         if (!socRes.error) {
           currentSOC = socRes.data[0].value
