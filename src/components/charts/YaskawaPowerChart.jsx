@@ -1,54 +1,15 @@
 import { useEffect, useState } from "react";
-import moment, { max } from "moment";
-import {
-  Chart,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-  Filler,
-  LineController,
-} from "chart.js"
-import { Line } from "react-chartjs-2";
+import moment from "moment";
+
 import api from "../../api";
 import Loading from "../Loading";
-
-Chart.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  LineController,
-  Title,
-  Tooltip,
-  Legend,
-  Filler
-)
-
-export const options = {
-  animation: {
-    duration: 0
-  },
-  plugins: {
-    legend: {
-      position: 'top',
-    },
-  },
-  scales: {
-    y: {
-      min: 0,
-      max: 50,
-    },
-  },
-  maintainAspectRatio: true,
-}
+import { LineChart } from "@tremor/react";
 
 const maxData = 200;
 const pageSize = 25;
 
+
+const dataFormatter = (number) => `${Intl.NumberFormat("us").format(number).toString()}`;
 
 
 const YaskawaPowerChart = () => {
@@ -63,12 +24,12 @@ const YaskawaPowerChart = () => {
   const [labels, setLabels] = useState([]);
   const [data, setData] = useState([]);
 
-  
+
   const loadData = async () => {
 
-    while (currentPage * pageSize < maxData){
-      const res = await api.ems.yaskawa.get({params: {page: currentPage, pageSize: pageSize}})
-      if (res.error){
+    while (currentPage * pageSize < maxData) {
+      const res = await api.ems.yaskawa.get({ params: { page: currentPage, pageSize: pageSize } })
+      if (res.error) {
         setLoading(false)
       }
       if (currentPage === 0) {
@@ -84,7 +45,7 @@ const YaskawaPowerChart = () => {
 
       setData(_data)
       setLabels(_labels)
-      
+
       currentPage++;
     }
   }
@@ -92,8 +53,8 @@ const YaskawaPowerChart = () => {
 
   const loadNewData = async () => {
     // Get newest data starting from newestPointDate
-    const res = await api.ems.yaskawa.get({params: {limit: 200, start: moment(newestPointDate).add(1, 'seconds').toISOString()}});
-    if (res.error){
+    const res = await api.ems.yaskawa.get({ params: { limit: 200, start: moment(newestPointDate).add(1, 'seconds').toISOString() } });
+    if (res.error) {
       setLoading(false)
     }
     if (res.data && res?.data.length > 0) {
@@ -119,29 +80,26 @@ const YaskawaPowerChart = () => {
 
 
   useEffect(() => {
-    setChartData({
-      labels: labels,
-      datasets: [
-        {
-          label: "Active AC Power",
-          data: data,
-          borderColor: 'rgba(75,192,192,1)',
-          backgroundColor: 'rgba(75,192,192,0.1)'
-        },
-      ]
-    })
+    let _chartData = [];
+    for (let i = 0; i < data.length; i++) {
+      _chartData.push({
+        date: labels[i],
+        "Active AC Power": data[i],
+      })
+    }
+    setChartData(_chartData);
   }, [labels, data])
 
   useEffect(() => {
     if (currentPage === 0) setLoading(true)
     loadData()
-    
+
     const intervalId = setInterval(() => {
       loadNewData()
-    }, 14000)
+    }, 60000)
 
     return () => {
-      clearInterval(intervalId); 
+      clearInterval(intervalId);
     }
   }, [])
 
@@ -151,16 +109,17 @@ const YaskawaPowerChart = () => {
     )
   }
   else {
-    return(
-      <div className="w-full h-full">
-        <Line
-          datasetIdKey='id'
-          data={chartData}
-          options={options}
-          redraw={false}
-          height={"300px"}
-        />
-      </div>
+    return (
+      <LineChart
+        className="mt-6"
+        data={chartData}
+        index="date"
+        categories={["Active AC Power"]}
+        colors={["emerald"]}
+        valueFormatter={dataFormatter}
+        yAxisWidth={40}
+        maxValue={30}
+      />
     )
   }
 }

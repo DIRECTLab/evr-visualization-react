@@ -252,7 +252,7 @@ const MonitorChart = () => {
     const intervalId = setInterval(() => {
       loadNewLeviton();
       loadNewSolarData();
-    }, 14000)
+    }, 30000)
 
     return () => {
       clearInterval(intervalId);
@@ -284,12 +284,12 @@ const MonitorChart = () => {
         <div className="justify-center text-center">
           <div className="stats shadow text-center">
             <div className="stat place-items-center">
-              <div className="stat-title font-bold text-xl">Total Solar Power (kW)</div>
-              <div className="stat-value text-md pb-4">{isNaN(Number(sumData.slice(-1)[0]).toFixed(2)) ? '--' : Number(sumData.slice(-1)[0]).toFixed(2)}</div>
-            </div>
-            <div className="stat place-items-center">
               <div className="stat-title font-bold text-xl">Utility Power (kW)</div>
               <div className="stat-value text-md pb-4">{isNaN(Number(levitonData.slice(-1)[0].toFixed(2))) === NaN ? '--' : Number(levitonData.slice(-1)[0].toFixed(2))}</div>
+            </div>
+            <div className="stat place-items-center">
+              <div className="stat-title font-bold text-xl">Total Solar Power (kW)</div>
+              <div className="stat-value text-md pb-4">{isNaN(Number(sumData.slice(-1)[0]).toFixed(2)) ? '--' : Number(sumData.slice(-1)[0]).toFixed(2)}</div>
             </div>
             <div className="stat place-items-center">
               <div className="stat-title font-bold text-xl">EVR Load (kW)</div>

@@ -1,71 +1,30 @@
 import { useEffect, useRef, useState } from "react";
 import moment from "moment";
-import {
-  Chart,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-  Filler,
-  LineController,
-} from "chart.js"
-import { Line } from "react-chartjs-2";
 import api from "../../api";
 import Loading from "../Loading";
+import { LineChart } from "@tremor/react";
 
-Chart.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  LineController,
-  Title,
-  Tooltip,
-  Legend,
-  Filler
-)
-
-export const options = {
-  animation: {
-    duration: 0
-  },
-  plugins: {
-    legend: {
-      position: 'top',
-    },
-  },
-  scales: {
-    y: {
-      min: 0,
-      suggestedMax: 50,
-    },
-  },
-  maintainAspectRatio: true,
-}
 
 const maxData = 200;
 const pageSize = 25;
+const dataFormatter = (number) => `${Intl.NumberFormat("us").format(number).toString()}`;
 
 const GustavVoltageChart = () => {
   let newestPointDate = null;
   let currentPage = 0;
   let _data = [];
   let _labels = [];
-  
+
   let resData = [];
   const [chartData, setChartData] = useState({});
   const [loading, setLoading] = useState(true)
-  const chartRef = useRef(null);
 
   const [labels, setLabels] = useState([]);
   const [data, setData] = useState([]);
 
   const loadData = async () => {
     while ((currentPage) * pageSize < maxData) {
-      const res = await api.ems.gustav.get({ params: { page: currentPage, pageSize: pageSize} })
+      const res = await api.ems.gustav.get({ params: { page: currentPage, pageSize: pageSize } })
       if (res.error) {
         setLoading(false)
       }
@@ -88,22 +47,19 @@ const GustavVoltageChart = () => {
   }
 
   useEffect(() => {
-    setChartData({
-      labels: labels,
-      datasets: [
-        {
-          label: "Measured Voltage",
-          data: data,
-          borderColor: 'rgba(75,192,192,1)',
-          backgroundColor: 'rgba(75,192,192,0.1)'
-        },
-      ]
-    })
+    let _chartData = [];
+    for (let i = 0; i < data.length; i++) {
+      _chartData.push({
+        date: labels[i],
+        "Measured Voltage": data[i],
+      })
+    }
+    setChartData(_chartData);
   }, [labels, data])
 
   const loadNewData = async () => {
     // Get newest data starting from newestPointDate
-    const res = await api.ems.gustav.get({ params: { limit: 200, start: moment(newestPointDate).add(1, 'seconds').toISOString()} });
+    const res = await api.ems.gustav.get({ params: { limit: 200, start: moment(newestPointDate).add(1, 'seconds').toISOString() } });
     if (res.error) {
       setLoading(false)
     }
@@ -134,7 +90,7 @@ const GustavVoltageChart = () => {
 
     const intervalId = setInterval(() => {
       loadNewData()
-    }, 14000)
+    }, 60000)
 
     return () => {
       clearInterval(intervalId);
@@ -148,16 +104,16 @@ const GustavVoltageChart = () => {
   }
   else {
     return (
-      <div className="w-full h-full">
-        <Line
-          datasetIdKey='id'
-          data={chartData}
-          options={options}
-          ref={chartRef}
-          redraw={false}
-          height={"300px"}
-        />
-      </div>
+      <LineChart
+        className="mt-6"
+        data={chartData}
+        index="date"
+        categories={["Measured Voltage"]}
+        colors={["emerald"]}
+        valueFormatter={dataFormatter}
+        yAxisWidth={40}
+        maxValue={30}
+      />
     )
   }
 }

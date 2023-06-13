@@ -1,64 +1,22 @@
 import { useEffect, useRef, useState } from "react";
 import moment from "moment";
-import {
-  Chart,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-  Filler,
-  LineController,
-} from "chart.js"
-import { Line } from "react-chartjs-2";
 import api from "../../api";
 import Loading from "../Loading";
-
-Chart.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  LineController,
-  Title,
-  Tooltip,
-  Legend,
-  Filler
-)
-
-export const options = {
-  animation: {
-    duration: 0
-  },
-  plugins: {
-    legend: {
-      position: 'top',
-    },
-  },
-  scales: {
-    y: {
-      min: 0,
-      max: 50,
-    },
-  },
-  maintainAspectRatio: true,
-}
+import { LineChart } from "@tremor/react";
 
 const maxData = 200;
 const pageSize = 25;
 
+const dataFormatter = (number) => `${Intl.NumberFormat("us").format(number).toString()}`;
 const SMA7PowerChart = () => {
   let newestPointDate = null;
   let currentPage = 0;
   let _data = [];
   let _labels = [];
-  
+
   let resData = [];
   const [chartData, setChartData] = useState({});
   const [loading, setLoading] = useState(true)
-  const chartRef = useRef(null);
 
   const [labels, setLabels] = useState([]);
   const [data, setData] = useState([]);
@@ -81,7 +39,7 @@ const SMA7PowerChart = () => {
       setData(_data);
       setLabels(_labels);
       setLoading(false);
-      
+
       currentPage++;
     }
   }
@@ -114,17 +72,14 @@ const SMA7PowerChart = () => {
   }
 
   useEffect(() => {
-    setChartData({
-      labels: labels,
-      datasets: [
-        {
-          label: "AC Power",
-          data: data,
-          borderColor: 'rgba(75,192,192,1)',
-          backgroundColor: 'rgba(75,192,192,0.1)'
-        },
-      ]
-    })
+    let _chartData = [];
+    for (let i = 0; i < data.length; i++) {
+      _chartData.push({
+        date: labels[i],
+        "AC Power": data[i],
+      })
+    }
+    setChartData(_chartData);
   }, [labels, data])
 
   useEffect(() => {
@@ -133,7 +88,7 @@ const SMA7PowerChart = () => {
 
     const intervalId = setInterval(() => {
       loadNewData()
-    }, 14000)
+    }, 60000)
 
     return () => {
       clearInterval(intervalId);
@@ -147,16 +102,16 @@ const SMA7PowerChart = () => {
   }
   else {
     return (
-      <div className="w-full h-full">
-        <Line
-          datasetIdKey='id'
-          data={chartData}
-          options={options}
-          ref={chartRef}
-          redraw={false}
-          height={"300px"}
-        />
-      </div>
+      <LineChart
+        className="mt-6"
+        data={chartData}
+        index="date"
+        categories={["AC Power"]}
+        colors={["emerald"]}
+        valueFormatter={dataFormatter}
+        yAxisWidth={40}
+        maxValue={30}
+      />
     )
   }
 }

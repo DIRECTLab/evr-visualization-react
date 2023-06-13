@@ -1,7 +1,7 @@
-import React, { Suspense } from "react"
+import React from "react"
 import MonitorChart from "../components/home/MonitorChart";
 import GraphCarousel from "../components/home/GraphCarousel";
-const UsuChargers = React.lazy(() => import("../components/home/UsuChargers"));
+import UsuChargers from "../components/home/UsuChargers";
 
 
 const Home = () => {

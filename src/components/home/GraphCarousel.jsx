@@ -70,7 +70,7 @@ const GraphCarousel = () => {
     checkStatus()
     const intervalId = setInterval(() => {
       checkStatus()
-    }, 14000)
+    }, 60000)
     return () => {
       clearInterval(intervalId); 
     }
