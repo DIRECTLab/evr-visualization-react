@@ -66,7 +66,7 @@ const UsuChargers = () => {
     loadData()
     const intervalId = (() => {
       loadData()
-    }, 7000)
+    }, 14000)
     return () => {
       clearInterval(intervalId)
     }

@@ -133,7 +133,7 @@ const PrimoPowerChart = () => {
 
     const intervalId = setInterval(() => {
       loadNewData()
-    }, 7000)
+    }, 14000)
 
     return () => {
       clearInterval(intervalId);
