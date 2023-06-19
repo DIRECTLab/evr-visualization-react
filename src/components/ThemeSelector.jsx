@@ -1,15 +1,10 @@
-import { useEffect, useRef } from "react"
-import { useState } from "react"
+import { useEffect } from "react"
 
 const ThemeSelector = () => {
 
-  const themes = ["garden", "forest"]
-
-  // const [currentTheme, setCurrentTheme] = useState('garden')
-  
   useEffect(() => {
     let theme = localStorage.getItem('theme')
-    if (!theme){
+    if (!theme) {
       localStorage.setItem('theme', 'garden')
       theme = 'garden'
     }
@@ -25,7 +20,7 @@ const ThemeSelector = () => {
   }
 
   return (
-    <div className="dropdown dropdown-end">
+    <div className="dropdown dropdown-end dropdown-bottom">
       <label tabIndex={0}>Theme</label>
       <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 mt-4">
         <li><a className="w-full" onClick={() => toggleTheme('garden')}>Garden</a></li> 
@@ -35,7 +30,7 @@ const ThemeSelector = () => {
         <li><a className="w-full" onClick={() => toggleTheme('luxury')}>Luxury</a></li>
       </ul>
     </div>
+
   )
 }
-
 export default ThemeSelector
