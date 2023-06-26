@@ -26,7 +26,6 @@ const ChargerTable = () => {
     },
     {
       accessorKey: 'connected',
-      // cell: info => info.getValue() ? <i className="fa-solid fa-circle-check text-success"></i> : <i className="fa-solid fa-circle-xmark text-error"></i>,
       cell: info => info.getValue() ? <FontAwesomeIcon icon={faCircleCheck} className="text-success"/> :<FontAwesomeIcon icon={faXmarkCircle} className="text-error"/>,
 
       header: () => <span>Connected</span>,
@@ -50,13 +49,13 @@ const ChargerTable = () => {
   const [loading, setLoading] = useState(true)
   
   const loadData = async () => {
-    const res = await api.getChargers();
+    const res = await api.charger.get();
     if (res.error){
       return
     }
     
       const chargerData = await Promise.all(res.data.map(async charger => {
-        const chargerRes = await api.charger(charger.id).getStatus();
+        const chargerRes = await api.charger.status({ params: {recent: true, id: charger.id}});
         if (chargerRes.error){
           alert(chargerRes.error)
         }
@@ -116,7 +115,7 @@ const ChargerTable = () => {
           </label>
           <input type="text" placeholder="Search" onInput={(e) => {setSearchFilter(e.target.value); updateFilter()}} className="input input-bordered w-full max-w-xs" />
         </div>
-        <div className="overflow-x-auto w-full">
+        <div className="overflow-x-auto w-full h-[35rem]">
           <table className="table table-zebra w-full">
             <thead>
               {table.getHeaderGroups().map((headerGroup, header_group_id) => (

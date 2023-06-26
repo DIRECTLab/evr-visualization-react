@@ -1,93 +1,103 @@
 import { useEffect, useRef, useState } from "react";
 import moment from "moment";
-import {
-  Chart,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-  Filler,
-  LineController,
-} from "chart.js"
-import { Line } from "react-chartjs-2";
 import api from "../../api";
 import Loading from "../Loading";
+import { LineChart } from "@tremor/react";
 
-Chart.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  LineController,
-  Title,
-  Tooltip,
-  Legend,
-  Filler
-)
-
-export const options = {
-  animation: {
-    duration: 0
-  },
-  plugins: {
-    legend: {
-      position: 'top',
-    },
-  },
-  scales: {
-    y: {
-      min: 0,
-      max: 50,
-    },
-  },
-  maintainAspectRatio: true,
-}
-
+const maxData = 200;
+const pageSize = 25;
+const dataFormatter = (number) => `${Intl.NumberFormat("us").format(number).toString()}`;
 
 const SMA50PowerChart = () => {
+  let newestPointDate = null;
+  let currentPage = 0;
+  let _data = [];
+  let _labels = [];
+
+  let resData = [];
   const [chartData, setChartData] = useState({});
   const [loading, setLoading] = useState(true)
-  const chartRef = useRef(null);
+
+  const [labels, setLabels] = useState([]);
+  const [data, setData] = useState([]);
 
 
-  
+
+
   const loadData = async () => {
-    const res = await api.ems.sma50.get100()
-    if (res.error){
+
+    while ((currentPage) * pageSize < maxData) {
+      const res = await api.ems.sma50.get({ params: { page: currentPage, pageSize: pageSize } })
+      if (res.error) {
+        setLoading(false)
+      }
+      if (currentPage === 0) {
+        newestPointDate = res.data[0].createdAt;
+      }
+      resData.push(...res.data)
+      resData.sort((a, b) => a.id - b.id)
+
+      _data = resData.map(data => data.acPower);
+      _labels = resData.map(data => moment(data.updatedAt).format('LTS'));
+
       setLoading(false)
+
+      setData(_data)
+      setLabels(_labels)
+
+      currentPage++;
     }
-    
-    const labels = res.data.map(data => moment(data.updatedAt).format('LTS')).reverse()
-    const data = res.data.map(data => data.acPower).reverse()
-
-
-    setChartData({
-      labels: labels,
-      datasets: [
-        {
-          label: "AC Power",
-          data: data,
-          borderColor: 'rgba(75,192,192,1)',
-          backgroundColor: 'rgba(75,192,192,0.1)'
-        },
-      ]
-    })
-    setLoading(false)
   }
 
   useEffect(() => {
-    setLoading(true)
+    let _chartData = [];
+    for (let i = 0; i < data.length; i++) {
+      _chartData.push({
+        date: labels[i],
+        "AC Power": data[i],
+      })
+    }
+    setChartData(_chartData);
+  }, [labels, data])
+
+  const loadNewData = async () => {
+    // Get newest data starting from newestPointDate
+    const res = await api.ems.sma50.get({ params: { limit: 200, start: moment(newestPointDate).add(1, 'seconds').toISOString() } });
+    if (res.error) {
+      setLoading(false)
+    }
+    if (res.data && res?.data.length > 0) {
+      newestPointDate = res.data[0].createdAt;
+      resData.push(...res.data)
+      resData.sort((a, b) => a.id - b.id)
+
+      _data = resData.map(data => data.acPower);
+      _labels = resData.map(data => moment(data.updatedAt).format('LTS'));
+
+      // removes oldest values
+      if (_data.length > maxData) {
+        _data = _data.slice(_data.length - maxData);
+        _labels = _labels.slice(_labels.length - maxData);
+      }
+
+
+      setData(_data)
+      setLabels(_labels)
+    }
+
+  }
+
+
+  useEffect(() => {
+    if (currentPage === 0) setLoading(true)
     loadData()
-    
+
     const intervalId = setInterval(() => {
-      loadData()
-    }, 7000)
+      loadNewData()
+    }, 60000)
 
     return () => {
-      clearInterval(intervalId); 
+      clearInterval(intervalId);
     }
   }, [])
 
@@ -97,17 +107,17 @@ const SMA50PowerChart = () => {
     )
   }
   else {
-    return(
-      <div className="w-full h-full">
-        <Line
-          datasetIdKey='id'
-          data={chartData}
-          options={options}
-          ref={chartRef}
-          redraw={false}
-          height={"300px"}
-        />
-      </div>
+    return (
+      <LineChart
+        className="mt-6"
+        data={chartData}
+        index="date"
+        categories={["AC Power"]}
+        colors={["emerald"]}
+        valueFormatter={dataFormatter}
+        yAxisWidth={40}
+        maxValue={30}
+      />
     )
   }
 }

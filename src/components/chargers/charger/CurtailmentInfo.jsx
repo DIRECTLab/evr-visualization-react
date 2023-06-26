@@ -11,7 +11,7 @@ const CurtailmentInfo = ({id}) => {
 
 
   const loadData = async () => {
-    const res = await api.charger(id).getChargeProfile();
+    const res = await api.charger.profile({params: {id: id, current: true}});
     if (res.error) {
       setLoading(false);
       return alert(res.error);
@@ -19,7 +19,7 @@ const CurtailmentInfo = ({id}) => {
     let limit = res?.data?.chargingSchedule?.chargingSchedulePeriod[0]?.limit / 1000 || "";
     setCurValue(limit);
     
-    const chargerDetailsRes = await api.charger(id).get();
+    const chargerDetailsRes = await api.charger.get({params: {id: id}});
     setChargerDetails(chargerDetailsRes.data);
     setLoading(false);
 

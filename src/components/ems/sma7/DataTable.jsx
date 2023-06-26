@@ -9,6 +9,8 @@ import api from '../../../api'
 import Loading from '../../Loading'
 
 const DataTable = () => {
+  const [pageIndex, setPageIndex] = useState(0);
+  const [pageSize, setPageSize] = useState(10);
 
   const columns = [
     {
@@ -78,7 +80,7 @@ const DataTable = () => {
     },
     {
       accessorKey: 'status',
-      cell: info => info.getValue() === 'MPP (Running Normal)' ? <i class="fa-solid fa-circle-check text-success"></i> : <i class="fa-solid fa-circle-xmark text-error"></i>,
+      cell: info => info.getValue() === 'MPP (Running Normal)' ? <i className="fa-solid fa-circle-check text-success"></i> : <i className="fa-solid fa-circle-xmark text-error"></i>,
       header: () => <span>Running</span>,
     },
   ]
@@ -108,7 +110,7 @@ const DataTable = () => {
 
 
   const loadData = async () => {
-    const res = await api.ems.sma7.getAll();
+    const res = await api.ems.sma7.get({params: {page: pageIndex, pageSize: pageSize}});
     if (res.error) {
       return alert(res.error)
     }
@@ -122,7 +124,7 @@ const DataTable = () => {
 
   useEffect(() => {
     loadData()
-  }, [])
+  }, [pageSize, pageIndex])
   
 
   const table = useReactTable({
@@ -175,6 +177,32 @@ const DataTable = () => {
             </tbody>
           </table>
         </div>
+        <div className="h-2" />
+        <div className="btn-group border-primary">
+          <button
+            className="btn"
+            disabled={pageIndex === 0}
+            onClick={() => setPageIndex(0)}
+          >«</button>
+          <button
+            className="btn"
+            disabled={pageIndex === 0}
+            onClick={() => setPageIndex(old => old - 1)}
+          >‹</button>
+          <button className="btn">Page {pageIndex}</button>
+          <button onClick={() => setPageIndex(old => old + 1)} className="btn">›</button>
+        </div>
+        <select
+          className="select select-primary w-full max-w-xs ml-4"
+          defaultValue={{ label: 'Items per page', value: pageSize }}
+          onChange={(e) => { setPageSize(e.target.value); }}
+        >
+          <option disabled>Items per Page</option>
+          <option value={10}>10</option>
+          <option value={25}>25</option>
+          <option value={50}>50</option>
+          <option value={100}>100</option>
+        </select>
       </div>
       
     )

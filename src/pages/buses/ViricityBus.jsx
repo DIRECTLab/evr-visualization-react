@@ -50,7 +50,7 @@ export const options = {
 
 
 
-const NewFlyerBus = () => {
+const VircitiBus = () => {
   const { id } = useParams()
   const [bus, setBus] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -58,7 +58,7 @@ const NewFlyerBus = () => {
 
   
   const loadData = async () => {
-    const busesRes = await api.viriciti.specific(id).getBus();
+    const busesRes = await api.bus.viriciti.get({params: {vid: id}});
     if (busesRes.error){
       setLoading(false)
       return alert(busesRes.error)
@@ -68,16 +68,17 @@ const NewFlyerBus = () => {
       bus = busesRes.data
     let current = null
     try {
-      const currentRes = await api.viriciti.specific(bus.vid, 1).getCurrent()
+      const currentRes = await api.bus.viriciti.current({params: {vid: bus.vid, limit: 1}});
+
       if (!currentRes.error) {
         current = currentRes.data[0].value
       }
     }
     catch{}
     bus.current = current
+
  
 
-    // get gps data
     let gps = {
       lat: null,
       long: null
@@ -86,7 +87,8 @@ const NewFlyerBus = () => {
       let soc = null
       let currentSOC = null
       try{
-        const socRes = await api.viriciti.specific(bus.vid).getSOC()
+        const socRes = await api.bus.viriciti.soc({params: {vid: bus.vid, limit: 100}});
+
         if (!socRes.error) {
           currentSOC = socRes.data[0].value
           soc = socRes.data
@@ -111,7 +113,8 @@ const NewFlyerBus = () => {
       })
 
 
-      const gpsRes = await api.viriciti.specific(bus.vid, 1).getGPS()
+      const gpsRes = await api.bus.viriciti.gps({params: {vid: bus.vid, limit: 1}});
+
       if (!gpsRes.error) {
         gps.lat = gpsRes.data[0].lat
         gps.long = gpsRes.data[0].long
@@ -122,7 +125,7 @@ const NewFlyerBus = () => {
     
     let odo = null
     try {
-      const odoRes = await api.viriciti.specific(bus.vid, 1).getOdo()
+      const odoRes = await api.bus.viriciti.odo({params: {vid: bus.vid, limit: 1}});
       if (!odoRes.error) {
         odo = odoRes.data[0].value
       }
@@ -132,7 +135,8 @@ const NewFlyerBus = () => {
 
     let power = null
     try {
-      const powerRes = await api.viriciti.specific(bus.vid, 1).getPower()
+      const powerRes = await api.bus.viriciti.power({params: {vid: bus.vid, limit: 1}});
+
       if (!powerRes.error) {
         power = powerRes.data[0].value
       }
@@ -143,7 +147,8 @@ const NewFlyerBus = () => {
 
     let speed = null
     try {
-      const speedRes = await api.viriciti.specific(bus.vid, 1).getSpeed()
+      const speedRes = await api.bus.viriciti.speed({params: {vid: bus.vid, limit: 1}});
+
       if (!speedRes.error) {
         speed = speedRes.data[0].value
       }
@@ -153,7 +158,8 @@ const NewFlyerBus = () => {
 
     let voltage = null
     try {
-      const voltRes = await api.viriciti.specific(bus.vid, 1).getVoltage()
+      const voltRes = await api.bus.viriciti.voltage({params: {vid: bus.vid, limit: 1}});
+
       if (!voltRes.error) {
         voltage = voltRes.data[0].value
       }
@@ -163,7 +169,8 @@ const NewFlyerBus = () => {
 
     let energyUsedPerDay = null
     try {
-      const energyPerDayRes = await api.viriciti.specific(bus.vid, 1).getEnergyUsedPerDay()
+      const energyPerDayRes = await api.bus.viriciti.energyUsedPerDay({params: {vid: bus.vid, limit: 1}});
+
       if (!energyPerDayRes.error) {
         energyUsedPerDay = energyPerDayRes.data[0].value
       }
@@ -241,4 +248,4 @@ const NewFlyerBus = () => {
   )
 }
 
-export default NewFlyerBus
+export default VircitiBus

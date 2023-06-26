@@ -60,7 +60,8 @@ const SpecificBus = ({id}) => {
 
   // CHART SETUP and DATA
   const loadData = async () => {
-    const busesRes = await api.newflyer.specific(id).getAllRoutes(daysToSearch);
+    const busesRes = await api.bus.newFlyer.routes({params: {id: id, limit: 500, days: daysToSearch}});
+
     if (busesRes.error){
       setLoading(false)
       return alert(busesRes.error)
@@ -75,7 +76,7 @@ const SpecificBus = ({id}) => {
       else{
         prev.socDataUnique.push(curr.soc);
         prev.usedTimes.add(curr.gpsFixTime);
-        prev.timeData.push(moment(curr.gpsFixTime).format('M/D/YYYY h:mm::ss a'))
+        prev.timeData.push(moment(curr.gpsFixTime).format('M/D/YYYY h:mm:ss a'))
         return prev
       }
     }, {socDataUnique: [], timeData: [], usedTimes: new Set()});
@@ -184,13 +185,13 @@ const SpecificBus = ({id}) => {
     setLoading(true)
     loadData()
     
-    const intervalId = setInterval(() => {
-      loadData()
-    }, 7000)
+    // const intervalId = setInterval(() => {
+    //   loadData()
+    // }, 7000)
 
-    return () => {
-      clearInterval(intervalId); 
-    }
+    // return () => {
+    //   clearInterval(intervalId); 
+    // }
   }, [])
   // 
 

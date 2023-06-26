@@ -11,13 +11,20 @@ const UsuChargers = () => {
 
   const loadData = async () => {
     // Get Charger curtailment Information
-    const res = await api.getChargers();
-    if (res.error){
-        return alert(res.error) // TODO: Make an alert
+    const charger03Res = await api.charger.get({params: {id: 'T175-IT1-3420-003'}});
+    if (charger03Res.error){
+        return alert(charger03Res.error);
     }
 
-    const chargerData = await Promise.all(res.data.map(async charger => {
-      const chargerRes = await api.charger(charger.id).getStatus();
+    const charger016Res = await api.charger.get({params: {id: "T175-IT1-3420-016"}});
+    if (charger016Res.error) {
+      return alert(charger016Res.error);
+    }
+
+    const chargers = [charger03Res.data, charger016Res.data];
+
+    const chargerData = await Promise.all(chargers.map(async charger => {
+      const chargerRes = await api.charger.status({params: {id: charger.id, recent: true}});
       if (chargerRes.error) {
         alert(chargerRes.error)
       }
@@ -26,70 +33,31 @@ const UsuChargers = () => {
       }
     }));
 
-    const usuChargers = chargerData.filter((value) => {
-      return value.ChargerId === "T175-IT1-3420-003" || value.ChargerId === "T175-IT1-3420-016";
-    })
 
-
-    await Promise.all(usuChargers.map(async charger => {
-      const chargerProfileRes = await api.charger(charger.ChargerId).getChargeProfile();
+    await Promise.all(chargerData.map(async charger => {
+      const chargerProfileRes = await api.charger.profile({params: {id: charger.ChargerId, limit: 1}});
       if (chargerProfileRes.error) {
         setLoading(false);
         return alert(chargerProfileRes.error);
       }
-      let limit = chargerProfileRes?.data?.chargingSchedule?.chargingSchedulePeriod[0]?.limit / 1000 || "";
+      let limit = chargerProfileRes?.data[0]?.chargingSchedule?.chargingSchedulePeriod[0]?.limit / 1000 || "";
       charger.curtailmentLimit = limit;
       
       // Add manual control status to charger object
-      const allChargerProfileRes = await api.charger(charger.ChargerId).getAllProfiles();
-      if (allChargerProfileRes.error) {
-        setLoading(false);
-        return alert(chargerProfileRes.error);
-      }
-      charger.manualControl = chargerProfileRes?.data?.manualControl
+      charger.manualControl = chargerProfileRes.data.manualControl
       charger.cleared = chargerProfileRes?.data?.cleared
-      
-      // Get Meter Values
-      const transactionRes = await api.charger(charger.ChargerId).getCurrentTransaction();
-      if (!transactionRes.data.id) {
-        charger.meterValue = ""
-      }
-      else {
-        const meterValueRes = await api.charger(charger.ChargerId).meterValues(transactionRes.data.id).getMeterValues();
-        if (meterValueRes.error) {
-          setLoading(false)
-          return alert(meterValueRes.error)
-        }
-        if (meterValueRes.data.length > 0) {
-          const meterValuesArray = meterValueRes.data[0].MeterValues;
-          for (let i = meterValuesArray.length - 1; i >= 0; i--) {
-            if (meterValuesArray[i].SampledValues[0].context === "Sample.Periodic") {
-              charger.meterValue = meterValuesArray[i].SampledValues[2].value / 1000;
-              charger.soc = meterValuesArray[i].SampledValues[0].value
-              break;
-            }
-            else {
-              charger.meterValue = ""
-              charger.soc = ""
-            }
-          }
-        }
-        else {
-          charger.meterValue = ""
-        }
-      }
     }));
 
     let inManualMode = false;
-    for (let i = 0; i < usuChargers.length; i++) {
+    for (let i = 0; i < chargerData.length; i++) {
   
-      if (usuChargers[i]?.manualControl && !usuChargers[i]?.cleared) {
+      if (chargerData[i].manualControl && !chargerData[i].cleared) {
         inManualMode = true;
       } 
     }
     setManualControl(inManualMode);
 
-    setChargers(usuChargers);
+    setChargers(chargerData);
     setLoading(false);
   }
 
@@ -98,7 +66,7 @@ const UsuChargers = () => {
     loadData()
     const intervalId = (() => {
       loadData()
-    }, 7000)
+    }, 14000)
     return () => {
       clearInterval(intervalId)
     }
@@ -121,12 +89,6 @@ const UsuChargers = () => {
               <div className="stat-value pb-4">{charger.curtailmentLimit} {charger.curtailmentLimit ? 'kW' : 'Not Set'}</div>
               <div className="stat-title font-bold text-xl">Status</div>
               <div className="stat-value text-md pb-4">{charger.status}</div>
-              {/* {charger.meterValue &&
-              <>
-                <div className="stat-title font-bold text-xl">Meter Value</div>
-                <div className="stat-value text-md pb-4">{charger.meterValue} {charger.meterValue ? 'kW' : 'No Data'}</div>
-              </>
-              } */}
               {charger.soc && 
               <>
                 <div className="stat-title font-bold text-xl">Charge Level</div>

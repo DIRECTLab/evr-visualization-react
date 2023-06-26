@@ -16,7 +16,7 @@ const NavigationBar = () => {
                 <li><Link to="/chargers">Chargers</Link></li>
                 <li><Link to="/buses">Buses</Link></li>
                 <li><Link to="/ems">EMS</Link></li>
-                <li><Link to="map">Map</Link></li>
+                <li><Link to="/map">Map</Link></li>
                 <li><div><ThemeSelector /></div></li>
             </ul>
           </div>

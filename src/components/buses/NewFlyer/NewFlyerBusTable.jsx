@@ -79,18 +79,19 @@ const NewFlyerBusTable = () => {
   const [loading, setLoading] = useState(true)
   
   const loadData = async () => {
-    const busesRes = await api.newflyer.getAll();
+    const busesRes = await api.bus.newFlyer.get();
     if (busesRes.error){
       setLoading(false)
       return alert(busesRes.error)
     }
 
     const busWithRoutes = await Promise.all(busesRes.data.map(async (bus) => {
-      const routes = await api.newflyer.specific(bus.id).getRoute();
+      const routes = await api.bus.newFlyer.routes({params: {id: bus.id, limit: 1}});
+
       if (routes.error){
-        console.log(routes.error)
+        alert(routes.error)
       }
-      return { ...routes.data.lastRoute, ...bus };
+      return { ...routes.data[0], ...bus };
     }));
 
 
