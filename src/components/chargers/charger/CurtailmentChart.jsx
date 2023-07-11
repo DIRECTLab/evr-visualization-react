@@ -44,39 +44,50 @@ export const options = {
     },
   },
   maintainAspectRatio: true,
-  
+
 }
 
 
-const CurtailmentChart = ({id}) => {
+const CurtailmentChart = ({ id }) => {
   const [chartData, setChartData] = useState({});
   const [loading, setLoading] = useState(true)
 
 
-  
+
   const loadData = async () => {
-    const chargerProfileRes = await api.charger.profile({params: {id: id, limit: 50}});
-    if (chargerProfileRes.error){
+    const chargerProfileRes = await api.charger.profile({ params: { id: id, limit: 50 } });
+    if (chargerProfileRes.error) {
       return
     }
 
-    const allData = chargerProfileRes.data.reverse().map(data => ({
-        label: moment(data.chargingSchedule.startSchedule).format('MMM DD h:mma'),
-        sortKey: moment(data.chargingSchedule.startSchedule),
-        data: data.chargingSchedule.chargingSchedulePeriod[0].limit / 1000,
-    }))
 
-    
+    const allData = chargerProfileRes.data.reverse().map(data => {
+      if (data.chargingProfileKind === "Relative") {
+        return ({
+          label: moment(data.createdAt).format('MMM DD h:mma'),
+          sortKey: moment(data.createdAt),
+          data: data.chargingSchedule.chargingSchedulePeriod[0].limit / 1000,
+        })
+      }
+      return ({
+        label: data.chargingSchedule.startSchedule ? 'invalid date' : moment(data.chargingSchedule.startSchedule).format('MMM DD h:mma'),
+        sortKey: data.chargingSchedule.startSchedule ? 'invalid date' : moment(data.chargingSchedule.startSchedule),
+        data: data.chargingSchedule.chargingSchedulePeriod[0].limit / 1000,
+      })
+    });
+
+
     const allDataSorted = allData.sort((a, b) => a.sortKey - b.sortKey);
-    
+
+
     const filteredData = allDataSorted.filter((data, index) => {
       return data.sortKey > moment().subtract(1, 'day') && data.data > 0
-    })      
+    })
 
     const labels = filteredData.map(data => data.label)
     const data = filteredData.map(data => data.data)
 
-    
+
     setChartData({
       labels: labels,
       datasets: [
@@ -94,13 +105,13 @@ const CurtailmentChart = ({id}) => {
   useEffect(() => {
     setLoading(true)
     loadData()
-    
+
     const intervalId = setInterval(() => {
       loadData()
     }, 7000)
 
     return () => {
-      clearInterval(intervalId); 
+      clearInterval(intervalId);
     }
   }, [])
 
@@ -110,7 +121,7 @@ const CurtailmentChart = ({id}) => {
     )
   }
   else {
-    return(
+    return (
       <div className="w-full h-full">
         <Line
           datasetIdKey='id'
