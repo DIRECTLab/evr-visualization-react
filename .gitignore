@@ -24,3 +24,7 @@ yarn-error.log*
 
 # might want to push the logs eventually
 /Logs/*
+
+**/Logs/**/*
+
+**/__pycache__/**

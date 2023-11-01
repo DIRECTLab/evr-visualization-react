@@ -1,0 +1,8 @@
+Interval Signal: 1.0
+Interval Signal: 2.0
+Interval Signal: 1.0
+Interval Signal: 0.0
+Interval Signal: 3.0
+Interval Signal: 4.0
+Interval Signal: 5.0
+Interval Signal: 6.0
