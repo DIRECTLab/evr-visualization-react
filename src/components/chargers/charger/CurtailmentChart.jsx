@@ -70,15 +70,15 @@ const CurtailmentChart = ({ id }) => {
         })
       }
       return ({
-        label: data.chargingSchedule.startSchedule ? 'invalid date' : moment(data.chargingSchedule.startSchedule).format('MMM DD h:mma'),
-        sortKey: data.chargingSchedule.startSchedule ? 'invalid date' : moment(data.chargingSchedule.startSchedule),
-        data: data.chargingSchedule.chargingSchedulePeriod[0].limit / 1000,
+        label: !data.chargingSchedule.startSchedule ? 'invalid date' : moment(data.chargingSchedule.startSchedule).format('MMM DD h:mma'),
+        sortKey: !data.chargingSchedule.startSchedule ? 'invalid date' : moment(data.chargingSchedule.startSchedule),
+        data: data?.chargingSchedule?.chargingSchedulePeriod?.length ? data.chargingSchedule.chargingSchedulePeriod[0].limit / 1000 : 0,
       })
     });
 
 
     const allDataSorted = allData.sort((a, b) => a.sortKey - b.sortKey);
-
+    console.log(allData);
 
     const filteredData = allDataSorted.filter((data, index) => {
       return data.sortKey > moment().subtract(1, 'day') && data.data > 0
@@ -86,6 +86,7 @@ const CurtailmentChart = ({ id }) => {
 
     const labels = filteredData.map(data => data.label)
     const data = filteredData.map(data => data.data)
+
 
 
     setChartData({

@@ -12,6 +12,7 @@ import api from '../../../api'
 import Loading from '../../Loading'
 
 const ChargeProfileTable = ({id}) => {
+  console.log()
   const columns = [
     {
       accessorKey: 'chargingProfileId',
@@ -44,7 +45,7 @@ const ChargeProfileTable = ({id}) => {
       header: () => <span>Cleared</span>,
     },
     {
-      accessorFn: row => row.chargingSchedule.chargingSchedulePeriod[0].limit,
+      accessorFn: row => row?.chargingSchedule?.chargingSchedulePeriod?.length ? row.chargingSchedule.chargingSchedulePeriod[0].limit : 0,
       cell: info => info.getValue(),
       header: () => <span>Curtailment Limit</span>,
       id: 'limit'
