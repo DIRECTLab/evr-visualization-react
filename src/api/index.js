@@ -18,8 +18,7 @@ const requestGenerator = (getBase) => (method, uri) => (data = {}) => {
     .catch(e => e.response.data);
 };
 
-const getApiBase = () => 'http://129.123.28.49:11236'; // Production
-// const getApiBase = () => 'http://localhost:11236' // Development
+const getApiBase = () => process.env.REACT_APP_API_BASE_URL;
 const r = requestGenerator(getApiBase);
 
 const api = {
