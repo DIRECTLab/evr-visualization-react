@@ -19,6 +19,7 @@ const requestGenerator = (getBase) => (method, uri) => (data = {}) => {
 };
 
 const getApiBase = () => process.env.REACT_APP_API_BASE_URL;
+console.log("API Base URL: " + process.env.REACT_APP_API_BASE_URL);
 const r = requestGenerator(getApiBase);
 
 const api = {
