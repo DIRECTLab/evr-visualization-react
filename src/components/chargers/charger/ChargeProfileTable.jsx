@@ -12,7 +12,6 @@ import api from '../../../api'
 import Loading from '../../Loading'
 
 const ChargeProfileTable = ({id}) => {
-  console.log()
   const columns = [
     {
       accessorKey: 'chargingProfileId',

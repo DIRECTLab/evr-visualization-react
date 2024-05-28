@@ -8,6 +8,8 @@ import { useState, useEffect} from 'react'
 import moment from 'moment'
 import api from '../../../api'
 import Loading from '../../Loading'
+import UtilizationChart from './UtilizationChart'
+import { transformation } from 'leaflet'
 
 const TransactionTable = ({id}) => {
   const columns = [
@@ -71,16 +73,14 @@ const TransactionTable = ({id}) => {
         }
       }
       return false
-    })
-    setTransactions(filtered)
+    });
+    setTransactions(filtered);
   }
-
 
 
   const loadData = async () => {
 //    const chargerTransactionsRes = await api.charger(id).getTransactions();
     const chargerTransactionsRes = await api.charger.transaction({params: {id: id, limit: 20}});
-
 
     if (chargerTransactionsRes.error){
       return alert(chargerTransactionsRes.error)
@@ -91,8 +91,8 @@ const TransactionTable = ({id}) => {
   }
 
   useEffect(() => {
-    loadData()
-  }, [])
+    loadData();
+  }, []);
   
 
   const table = useReactTable({
@@ -100,22 +100,21 @@ const TransactionTable = ({id}) => {
     columns,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
-  })
+  });
 
 
   if (loading) {
     return (
       <Loading />
-    )
-  }
-  else {
+    );
+  } else {
     return (
       <div className="w-full">
-        <div className="form-control w-full max-w-xs mb-8">
+        <div className="form-control w-full mb-8">
           <label className="label">
             <span className="label-text text-lg">Search for a transaction value</span>
           </label>
-          <input type="text" placeholder="Search" onInput={(e) => {setSearchFilter(e.target.value); updateFilter()}} className="input input-bordered w-full max-w-xs" />
+          <input type="text" placeholder="Search" onInput={(e) => {setSearchFilter(e.target.value); updateFilter()}} className="input input-bordered w-full max-w-xs mr-2" />
         </div>
         <div className="overflow-x-auto w-full h-96">
           <table className="table table-zebra w-full">
@@ -145,10 +144,12 @@ const TransactionTable = ({id}) => {
             </tbody>
           </table>
         </div>
+
+        <h1 className="text-4xl font-bold my-4">Charger Utilization</h1>
+        <UtilizationChart transactions={transactions} />
       </div>
-      
-    )
+    );
   }
 }
 
-export default TransactionTable
+export default TransactionTable;

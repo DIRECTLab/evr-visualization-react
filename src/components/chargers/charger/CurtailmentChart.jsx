@@ -78,7 +78,6 @@ const CurtailmentChart = ({ id }) => {
 
 
     const allDataSorted = allData.sort((a, b) => a.sortKey - b.sortKey);
-    console.log(allData);
 
     const filteredData = allDataSorted.filter((data, index) => {
       return data.sortKey > moment().subtract(1, 'day') && data.data > 0

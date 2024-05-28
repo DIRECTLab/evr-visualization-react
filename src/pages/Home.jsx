@@ -16,7 +16,7 @@ const Home = () => {
         <UsuChargers />
       </div>
     </div>
-  )
+  );
 }
 
 export default Home;
