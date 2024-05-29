@@ -35,7 +35,8 @@ const Charger = () => {
 
       <h2 className="text-2xl font-bold">Charge Profiles</h2>
       <ChargeProfileTable id={id}/>
-      </div>
+
+    </div>
   )
 } 
 

@@ -54,18 +54,18 @@ const ChargerTable = () => {
       return
     }
     
-      const chargerData = await Promise.all(res.data.map(async charger => {
-        const chargerRes = await api.charger.status({ params: {recent: true, id: charger.id}});
-        if (chargerRes.error){
-          alert(chargerRes.error)
-        }
-        else{
-          return { ...charger, ...chargerRes.data };
-        }
-      }))
-      setAllChargers(chargerData);
-      setChargers(chargerData);
-      setLoading(false);
+    const chargerData = await Promise.all(res.data.map(async charger => {
+      const chargerRes = await api.charger.status({ params: {recent: true, id: charger.id}});
+      if (chargerRes.error){
+        alert(chargerRes.error)
+      }
+      else{
+        return { ...charger, ...chargerRes.data };
+      }
+    }))
+    setAllChargers(chargerData);
+    setChargers(chargerData);
+    setLoading(false);
   }
 
   useEffect(() => {
